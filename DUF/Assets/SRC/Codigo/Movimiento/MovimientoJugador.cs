@@ -43,8 +43,9 @@ public class MovimientoJugador : MonoBehaviour
 
     private void Movimiento() {
 
-        direccionMovimiento = orientacion.forward * inputVertical + orientacion.right * inputHorizontal;
+        direccionMovimiento = (orientacion.forward * inputVertical) + (orientacion.right * inputHorizontal);
+        //direccionMovimiento.y = 0f;
 
-        rb.AddForce(direccionMovimiento.normalized * velocidadMove * 10f, ForceMode.Force);
+        rb.AddForce(10f * velocidadMove * direccionMovimiento.normalized, ForceMode.Force);
     }
 }
