@@ -7,15 +7,26 @@ public class MovimientoJugador : MonoBehaviour
 {
 
     [Header("Movimiento")]
-    public float velocidadMove;
+    private float velocidadMovimiento;
+    public float velocidadCaminando;
+    public float velocidadCorriendo;
     public float friccionPiso;
+
+    [Header("Salto")]
     public float fuarzaSalto;
     public float coolDownSalto;
     public float multiplicadorAire;
     bool puedeSaltar;
 
+    [Header("Agacharse")]
+    public float velocidadAgachado;
+    public float escalaYAgachado;
+    private float inicioEscalY;
+
     [Header("Controles")]
     public KeyCode teclaSalto = KeyCode.Space;
+    public KeyCode teclaCorrer = KeyCode.LeftShift;
+    public KeyCode teclaAgacharse = KeyCode.LeftControl;
 
     [Header("Check piso")]
     public float alturaJugador;
@@ -31,6 +42,15 @@ public class MovimientoJugador : MonoBehaviour
 
     Rigidbody rb;
 
+    public EstadoMovimiento estadoMovimieto;
+
+    public enum EstadoMovimiento {
+        caminando,
+        corriendo,
+        agachado,
+        aire
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +60,8 @@ public class MovimientoJugador : MonoBehaviour
         rb.mass = 1f;
 
         puedeSaltar = true;
+
+        inicioEscalY = transform.localScale.y;
     }
 
     // Update is called once per frame
@@ -51,9 +73,13 @@ public class MovimientoJugador : MonoBehaviour
         Debug.DrawRay(transform.position, Vector3.down * (alturaJugador * 0.5f + 0.2f), Color.red);
 
         Inputs();
+        ControlVelocidad();
+        ManejadorEstadoMovimiento();
 
         if(tocandoPiso) {
             rb.drag = friccionPiso;
+        } else {
+            rb.drag = 0f;
         }
 
         Debug.Log("TocandoPiso: " + tocandoPiso);
@@ -63,7 +89,6 @@ public class MovimientoJugador : MonoBehaviour
     void FixedUpdate()
     {
         Movimiento();
-        ControlVelocidad();
         rb.AddForce(Vector3.down * 9.81f * rb.mass, ForceMode.Force);
 
     }
@@ -82,21 +107,27 @@ public class MovimientoJugador : MonoBehaviour
             Salto();
             Invoke(nameof(ResetSalto), coolDownSalto);
         }
+
+        if (Input.GetKeyDown(teclaAgacharse) ) {
+            transform.localScale = new Vector3(transform.localScale.x, escalaYAgachado, transform.localScale.z);
+            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+        }
+
+        if (Input.GetKeyUp(teclaAgacharse) ) {
+            transform.localScale = new Vector3(transform.localScale.x, inicioEscalY, transform.localScale.z);
+        }
     }
 
     private void Movimiento() {
 
         direccionMovimiento = (orientacion.forward * inputVertical) + (orientacion.right * inputHorizontal);
 
-        
-        //direccionMovimiento.y = 0f;
-
 
         if(tocandoPiso)
-            rb.AddForce(10f * velocidadMove * direccionMovimiento.normalized, ForceMode.Force);
+            rb.AddForce(10f * velocidadMovimiento * direccionMovimiento.normalized, ForceMode.Force);
 
         else if (!tocandoPiso)
-            rb.AddForce(10f * multiplicadorAire * velocidadMove * direccionMovimiento.normalized, ForceMode.Force);
+            rb.AddForce(10f * multiplicadorAire * velocidadMovimiento * direccionMovimiento.normalized, ForceMode.Force);
 
 
 
@@ -105,8 +136,8 @@ public class MovimientoJugador : MonoBehaviour
     private void ControlVelocidad() {
         Vector3 velPlana = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-        if(velPlana.magnitude > velocidadMove) {
-            Vector3 velLimite = velPlana.normalized * velocidadMove;
+        if(velPlana.magnitude > velocidadMovimiento) {
+            Vector3 velLimite = velPlana.normalized * velocidadMovimiento;
             rb.velocity = new Vector3(velLimite.x, rb.velocity.y, velLimite.z);
         }
     }
@@ -119,5 +150,26 @@ public class MovimientoJugador : MonoBehaviour
 
     private void ResetSalto() {
         puedeSaltar = true;
+    }
+
+    private void ManejadorEstadoMovimiento() {
+        if(Input.GetKey(teclaAgacharse)) {
+            estadoMovimieto = EstadoMovimiento.agachado;
+            velocidadMovimiento = velocidadAgachado;
+        }
+
+        if(tocandoPiso && Input.GetKey(teclaCorrer)){
+            estadoMovimieto = EstadoMovimiento.corriendo;
+            velocidadMovimiento = velocidadCorriendo;
+        }
+
+        else if(tocandoPiso) {
+            estadoMovimieto = EstadoMovimiento.caminando;
+            velocidadMovimiento = velocidadCaminando;
+        }
+
+        else {
+            estadoMovimieto = EstadoMovimiento.aire;
+        }
     }
 }
