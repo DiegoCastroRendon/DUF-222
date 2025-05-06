@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,10 @@ public class MovimientoJugador : MonoBehaviour
     public float velocidadCaminando;
     public float velocidadCorriendo;
     public float friccionPiso;
+    public float velocidadDeslizamiento;
+
+    private float velocidadMovimientoDeseada;
+    private float ultimaVelocidadMovimientoDeseada;
 
     [Header("Salto")]
     public float fuarzaSalto;
@@ -54,8 +59,10 @@ public class MovimientoJugador : MonoBehaviour
         corriendo,
         agachado,
         aire,
-        deslizandose,
+        desliz
     }
+
+    public bool deslizandose;
 
     // Start is called before the first frame update
     void Start()
@@ -129,7 +136,7 @@ public class MovimientoJugador : MonoBehaviour
         direccionMovimiento = (orientacion.forward * inputVertical) + (orientacion.right * inputHorizontal);
 
         if(EnPendiente() && !saliendoPendiente) {
-            rb.AddForce(20f * velocidadMovimiento * GetDireccionMovimientoPendiente(), ForceMode.Force);
+            rb.AddForce(20f * velocidadMovimiento * GetDireccionMovimientoPendiente(direccionMovimiento), ForceMode.Force);
 
             if (rb.velocity.y > 0f) 
             {
@@ -179,27 +186,60 @@ public class MovimientoJugador : MonoBehaviour
     }
 
     private void ManejadorEstadoMovimiento() {
+        if(deslizandose && Input.GetKey(KeyCode.C)) {
+            estadoMovimieto = EstadoMovimiento.desliz;
+            Debug.Log("Deslizandose");
+            if(EnPendiente() && rb.velocity.y > 0f) {
+                velocidadMovimientoDeseada = velocidadDeslizamiento;
+            } else {
+                velocidadMovimientoDeseada = velocidadCorriendo;
+            }
+        }
+
         if(Input.GetKey(teclaAgacharse)) {
             estadoMovimieto = EstadoMovimiento.agachado;
-            velocidadMovimiento = velocidadAgachado;
+            velocidadMovimientoDeseada = velocidadAgachado;
         }
 
         if(tocandoPiso && Input.GetKey(teclaCorrer)){
             estadoMovimieto = EstadoMovimiento.corriendo;
-            velocidadMovimiento = velocidadCorriendo;
+            velocidadMovimientoDeseada = velocidadCorriendo;
         }
 
         else if(tocandoPiso) {
             estadoMovimieto = EstadoMovimiento.caminando;
-            velocidadMovimiento = velocidadCaminando;
+            velocidadMovimientoDeseada = velocidadCaminando;
         }
 
         else {
             estadoMovimieto = EstadoMovimiento.aire;
         }
+
+        if(Mathf.Abs(velocidadMovimientoDeseada - ultimaVelocidadMovimientoDeseada) > 4f && velocidadMovimiento != 0) {
+            StopAllCoroutines();
+            StartCoroutine(PerdidadVelocidadMovimietnoSueave());
+        } else {
+            velocidadMovimiento = velocidadMovimientoDeseada;
+        }
+
+        ultimaVelocidadMovimientoDeseada = velocidadMovimientoDeseada;
+
     }
 
-    private bool EnPendiente() {
+    private IEnumerator PerdidadVelocidadMovimietnoSueave() {
+        float tiempo = 0f;
+        float diferencia = Mathf.Abs(velocidadMovimientoDeseada - velocidadMovimiento);
+        float valorInical = velocidadMovimiento;
+
+        while(tiempo < diferencia) {
+            velocidadMovimiento = Mathf.Lerp(valorInical, velocidadMovimientoDeseada, tiempo / diferencia);
+            yield return null;
+        }
+
+        velocidadMovimiento = velocidadMovimientoDeseada;
+    }
+
+    public bool EnPendiente() {
         if(Physics.Raycast(transform.position, Vector3.down, out tocandoPendiente, alturaJugador * 0.5f + 0.3f))
          {
             float anguloPendiente = Vector3.Angle(Vector3.up, tocandoPendiente.normal);
@@ -209,7 +249,7 @@ public class MovimientoJugador : MonoBehaviour
         return false;
     }
 
-    private Vector3 GetDireccionMovimientoPendiente() {
-        return Vector3.ProjectOnPlane(direccionMovimiento, tocandoPendiente.normal).normalized;
+    public Vector3 GetDireccionMovimientoPendiente(Vector3 direccion) {
+        return Vector3.ProjectOnPlane(direccion, tocandoPendiente.normal).normalized;
     }
 }

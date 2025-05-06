@@ -27,8 +27,6 @@ public class Deslizamiento : MonoBehaviour
     public KeyCode teclaDeslizamiento = KeyCode.C;
     private float inputHorizontal;
     private float inputVeritical;
-
-    private bool deslizandose;
     private bool puedeDeslizarse = true;
 
 
@@ -53,14 +51,14 @@ public class Deslizamiento : MonoBehaviour
 
         }
 
-        if(Input.GetKeyUp(teclaDeslizamiento) && deslizandose) {
+        if(Input.GetKeyUp(teclaDeslizamiento) && pm.deslizandose) {
             DetenerDeslizamiento();
         }
     }
 
     void FixedUpdate()
     {
-        if(deslizandose) {
+        if(pm.deslizandose) {
             MovimietoDeslizamiento();
         }
     }
@@ -68,10 +66,16 @@ public class Deslizamiento : MonoBehaviour
     
         Vector3 direccionInput = orientacion.forward * inputVeritical + orientacion.right * inputHorizontal;
 
-        
+        if(!pm.EnPendiente() || rb.velocity.y > -0.0f) {
+
         rb.AddForce(direccionInput.normalized * fuerzaDeslizamiento, ForceMode.Force);
 
         contadorDeslizamiento -= Time.deltaTime;
+
+        } else {
+            rb.AddForce(pm.GetDireccionMovimientoPendiente(direccionInput)* fuerzaDeslizamiento, ForceMode.Force);
+        }
+
 
         if(contadorDeslizamiento <= 0) {
             DetenerDeslizamiento();
@@ -80,7 +84,7 @@ public class Deslizamiento : MonoBehaviour
     }
     private void InicarDeslizamiento() {
         
-        deslizandose = true;
+        pm.deslizandose = true;
         puedeDeslizarse = false;
 
         rb.drag = 0f;
@@ -90,14 +94,12 @@ public class Deslizamiento : MonoBehaviour
 
         contadorDeslizamiento = tiempoMaxDeslizamiento;
 
-        pm.estadoMovimieto = MovimientoJugador.EstadoMovimiento.deslizandose;
-
         Invoke(nameof(ReiniciarDeslizamiento), coolDownDeslizamiento);
         
     }
     private void DetenerDeslizamiento()
     {
-        deslizandose = false;
+        pm.deslizandose = false;
 
         playerObj.localScale = new Vector3(playerObj.localScale.x, escalaInicalY, playerObj.localScale.z);
     }
