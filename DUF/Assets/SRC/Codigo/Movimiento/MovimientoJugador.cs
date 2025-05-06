@@ -53,7 +53,8 @@ public class MovimientoJugador : MonoBehaviour
         caminando,
         corriendo,
         agachado,
-        aire
+        aire,
+        deslizandose,
     }
 
     // Start is called before the first frame update
@@ -94,7 +95,7 @@ public class MovimientoJugador : MonoBehaviour
     void FixedUpdate()
     {
         Movimiento();
-        rb.AddForce(9.81f * rb.mass * Vector3.down, ForceMode.Force);
+        //rb.AddForce(9.81f * rb.mass * Vector3.down, ForceMode.Force);
 
     }
 

@@ -351,6 +351,31 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 416085206}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &629833269 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1535469847038641981, guid: e46b4d9b46acf7b4587237e61c0ae42d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2110312635}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &629833273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629833269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba3535969b4b2354d9708a934d6878de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orientacion: {fileID: 868309555}
+  playerObj: {fileID: 1746527165}
+  tiempoMaxDeslizamiento: 0.75
+  fuerzaDeslizamiento: 200
+  escalaYDeslizamiento: 0.5
+  coolDownDeslizamiento: 1.5
+  teclaDeslizamiento: 99
 --- !u!1 &655277913
 GameObject:
   m_ObjectHideFlags: 0
@@ -1151,6 +1176,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1735344144}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1746527165 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4612500570201585525, guid: e46b4d9b46acf7b4587237e61c0ae42d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2110312635}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1870206235 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6472869484569348399, guid: e46b4d9b46acf7b4587237e61c0ae42d,
@@ -1198,6 +1229,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1837107576, guid: e46b4d9b46acf7b4587237e61c0ae42d, type: 3}
+      propertyPath: fuarzaSalto
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 1837107576, guid: e46b4d9b46acf7b4587237e61c0ae42d, type: 3}
+      propertyPath: friccionPiso
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1837107576, guid: e46b4d9b46acf7b4587237e61c0ae42d, type: 3}
+      propertyPath: teclaAgacharse
+      value: 306
+      objectReference: {fileID: 0}
+    - target: {fileID: 1837107576, guid: e46b4d9b46acf7b4587237e61c0ae42d, type: 3}
       propertyPath: escalaYAgachado
       value: 1
       objectReference: {fileID: 0}
@@ -1207,11 +1250,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1837107576, guid: e46b4d9b46acf7b4587237e61c0ae42d, type: 3}
       propertyPath: velocidadCaminando
-      value: 10
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 1837107576, guid: e46b4d9b46acf7b4587237e61c0ae42d, type: 3}
       propertyPath: velocidadCorriendo
-      value: 20
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1837107576, guid: e46b4d9b46acf7b4587237e61c0ae42d, type: 3}
+      propertyPath: maxAunguloPendiente
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 1535469847038641981, guid: e46b4d9b46acf7b4587237e61c0ae42d,
         type: 3}
