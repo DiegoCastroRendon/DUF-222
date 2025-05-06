@@ -38,6 +38,11 @@ public class MovimientoJugador : MonoBehaviour
     float inputHorizontal;
     float inputVertical;
 
+    [Header("Manejador de pendientes")]
+    public float maxAunguloPendiente;
+    private RaycastHit tocandoPendiente;
+    private bool saliendoPendiente;
+
     Vector3 direccionMovimiento;
 
     Rigidbody rb;
@@ -89,7 +94,7 @@ public class MovimientoJugador : MonoBehaviour
     void FixedUpdate()
     {
         Movimiento();
-        rb.AddForce(Vector3.down * 9.81f * rb.mass, ForceMode.Force);
+        rb.AddForce(9.81f * rb.mass * Vector3.down, ForceMode.Force);
 
     }
 
@@ -122,6 +127,15 @@ public class MovimientoJugador : MonoBehaviour
 
         direccionMovimiento = (orientacion.forward * inputVertical) + (orientacion.right * inputHorizontal);
 
+        if(EnPendiente() && !saliendoPendiente) {
+            rb.AddForce(20f * velocidadMovimiento * GetDireccionMovimientoPendiente(), ForceMode.Force);
+
+            if (rb.velocity.y > 0f) 
+            {
+                rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+            }
+        }
+
 
         if(tocandoPiso)
             rb.AddForce(10f * velocidadMovimiento * direccionMovimiento.normalized, ForceMode.Force);
@@ -134,15 +148,24 @@ public class MovimientoJugador : MonoBehaviour
     }
 
     private void ControlVelocidad() {
-        Vector3 velPlana = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-        if(velPlana.magnitude > velocidadMovimiento) {
-            Vector3 velLimite = velPlana.normalized * velocidadMovimiento;
-            rb.velocity = new Vector3(velLimite.x, rb.velocity.y, velLimite.z);
+        if(EnPendiente() && !saliendoPendiente) {
+            if(rb.velocity.magnitude > velocidadMovimiento) {
+                rb.velocity = rb.velocity.normalized * velocidadMovimiento;
+            }
+        } else  {
+            Vector3 velPlana = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+            if(velPlana.magnitude > velocidadMovimiento) {
+                Vector3 velLimite = velPlana.normalized * velocidadMovimiento;
+                rb.velocity = new Vector3(velLimite.x, rb.velocity.y, velLimite.z);
+            }
         }
     }
 
     private void Salto() {
+        saliendoPendiente = true;
+
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         rb.AddForce(transform.up * fuarzaSalto, ForceMode.Impulse);
@@ -150,6 +173,8 @@ public class MovimientoJugador : MonoBehaviour
 
     private void ResetSalto() {
         puedeSaltar = true;
+
+        saliendoPendiente = false;
     }
 
     private void ManejadorEstadoMovimiento() {
@@ -171,5 +196,19 @@ public class MovimientoJugador : MonoBehaviour
         else {
             estadoMovimieto = EstadoMovimiento.aire;
         }
+    }
+
+    private bool EnPendiente() {
+        if(Physics.Raycast(transform.position, Vector3.down, out tocandoPendiente, alturaJugador * 0.5f + 0.3f))
+         {
+            float anguloPendiente = Vector3.Angle(Vector3.up, tocandoPendiente.normal);
+            return anguloPendiente < maxAunguloPendiente && anguloPendiente != 0f;
+        }
+
+        return false;
+    }
+
+    private Vector3 GetDireccionMovimientoPendiente() {
+        return Vector3.ProjectOnPlane(direccionMovimiento, tocandoPendiente.normal).normalized;
     }
 }
