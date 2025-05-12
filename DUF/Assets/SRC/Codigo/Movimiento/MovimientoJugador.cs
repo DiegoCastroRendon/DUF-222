@@ -13,6 +13,7 @@ public class MovimientoJugador : MonoBehaviour
     public float velocidadCorriendo;
     public float friccionPiso;
     public float velocidadDeslizamiento;
+    public float velocidadWallRun;
 
     private float velocidadMovimientoDeseada;
     private float ultimaVelocidadMovimientoDeseada;
@@ -39,8 +40,7 @@ public class MovimientoJugador : MonoBehaviour
     bool tocandoPiso;
 
     public Transform orientacion;
-
-    float inputHorizontal;
+     float inputHorizontal;
     float inputVertical;
 
     [Header("Manejador de pendientes")]
@@ -57,12 +57,14 @@ public class MovimientoJugador : MonoBehaviour
     public enum EstadoMovimiento {
         caminando,
         corriendo,
+        wallrunning,
         agachado,
         aire,
         desliz
     }
 
     public bool deslizandose;
+    public bool wallrunning;
 
     // Start is called before the first frame update
     void Start()
@@ -186,6 +188,11 @@ public class MovimientoJugador : MonoBehaviour
     }
 
     private void ManejadorEstadoMovimiento() {
+
+        if(wallrunning){
+            estadoMovimieto = EstadoMovimiento.wallrunning;
+            velocidadMovimientoDeseada = velocidadWallRun;
+        }
         if(deslizandose && Input.GetKey(KeyCode.C)) {
             estadoMovimieto = EstadoMovimiento.desliz;
             Debug.Log("Deslizandose");
