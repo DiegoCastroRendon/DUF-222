@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+
 
 public class CamaraFP : MonoBehaviour
 {
@@ -8,6 +10,7 @@ public class CamaraFP : MonoBehaviour
     public float sensY;
 
     public Transform orientation;
+    public Transform camHolder;
 
     float rotacionX;
     float rotacionY;
@@ -28,7 +31,19 @@ public class CamaraFP : MonoBehaviour
         rotacionX -= mouseY;
         rotacionX = Mathf.Clamp(rotacionX, -90f, 90f);
 
-        transform.rotation = Quaternion.Euler(rotacionX, rotacionY, 0);
+        camHolder.rotation = Quaternion.Euler(rotacionX, rotacionY, 0);
         orientation.rotation = Quaternion.Euler(0, rotacionY, 0);
+    }
+
+    public void DoFoV(float endValue){
+
+        GetComponent<Camera>().DOFieldOfView(endValue,0.25f);
+
+    }
+
+    public void DoTilt(float zTilt){
+
+        transform.DOLocalRotate(new Vector3(0,0,zTilt), 0.25f);
+
     }
 }

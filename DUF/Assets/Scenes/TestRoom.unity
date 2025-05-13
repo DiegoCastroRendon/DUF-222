@@ -254,6 +254,12 @@ Transform:
   m_Father: {fileID: 2065711682}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &282584573 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5766725941897586397, guid: 12930fef91ff7ce40a93891e496a0ca1,
+    type: 3}
+  m_PrefabInstance: {fileID: 5766725942290860642}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &348224292
 GameObject:
   m_ObjectHideFlags: 0
@@ -602,6 +608,7 @@ MonoBehaviour:
   useGravity: 1
   antiGravedad: 12
   orientacion: {fileID: 868309555}
+  cam: {fileID: 1503408770}
 --- !u!1 &655277913
 GameObject:
   m_ObjectHideFlags: 0
@@ -1305,6 +1312,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: -45, y: 0, z: 0}
+--- !u!114 &1503408770 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5766725942392016232, guid: 12930fef91ff7ce40a93891e496a0ca1,
+    type: 3}
+  m_PrefabInstance: {fileID: 5766725942290860642}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cb0f752ee846f14f92031ed7d00b8d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1600659048
 GameObject:
   m_ObjectHideFlags: 0
@@ -1822,6 +1841,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CamaraFPHolder
       objectReference: {fileID: 0}
+    - target: {fileID: 5766725942392016232, guid: 12930fef91ff7ce40a93891e496a0ca1,
+        type: 3}
+      propertyPath: camHolder
+      value: 
+      objectReference: {fileID: 282584573}
     - target: {fileID: 5766725942392016232, guid: 12930fef91ff7ce40a93891e496a0ca1,
         type: 3}
       propertyPath: orientation
