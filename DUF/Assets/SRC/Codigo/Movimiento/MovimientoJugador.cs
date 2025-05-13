@@ -153,6 +153,7 @@ public class MovimientoJugador : MonoBehaviour
         else if (!tocandoPiso)
             rb.AddForce(10f * multiplicadorAire * velocidadMovimiento * direccionMovimiento.normalized, ForceMode.Force);
 
+        if(wallrunning) rb.useGravity = !EnPendiente();
 
 
     }

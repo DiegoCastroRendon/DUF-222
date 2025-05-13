@@ -9,12 +9,16 @@ public class WallRunning : MonoBehaviour
     public LayerMask esPared;
     public LayerMask esSuelo;
     public float fuerzaWallRun;
+    public float fuerzaUpWallJump;
+    public float fuerzaSideWallJump;
+
     public float velocidadSubirPared;
     public float tiempoMaximoWallRun;
     private float contadorWallRun;
     [Header("Controles")]
-    public KeyCode WallRunArriba = KeyCode.I;
-    public KeyCode WallRunAbajo = KeyCode.K;
+    public KeyCode taclaJump = KeyCode.Space;
+    public KeyCode WallRunArriba = KeyCode.LeftShift;
+    public KeyCode WallRunAbajo = KeyCode.LeftControl;
     private bool runArriba;
     private bool runAbajo;
     private float horizontalInput;
@@ -26,6 +30,17 @@ public class WallRunning : MonoBehaviour
     private RaycastHit derWallHit;
     private bool paredIzq;
     private bool paredDer;
+
+    [Header ("Saliendo")]
+    private bool saliendoPared;
+    public float tiempoSalidaPared;
+    private float contadorTiempoSalida;
+
+    [Header("Gravedad")]
+    public bool useGravity;
+    public float antiGravedad;
+
+
     [Header("Referencias")]
     public Transform orientacion;
     private MovimientoJugador pm;
@@ -71,12 +86,36 @@ public class WallRunning : MonoBehaviour
         runAbajo = Input.GetKey(WallRunAbajo);
 
         // Estado de wallrun
-        if((paredIzq || paredDer) && verticalInput > 0 && SobreSuelo()){
+        if((paredIzq || paredDer) && verticalInput > 0 && SobreSuelo() && !saliendoPared){
             //Empezar wallrun
             if(!pm.wallrunning){
                 StartWallRun();
             }
 
+            if(contadorWallRun > 0){
+                contadorWallRun -= Time.deltaTime;
+            }
+
+            if(contadorWallRun <= 0 && pm.wallrunning){
+                saliendoPared = true;
+                contadorTiempoSalida = tiempoSalidaPared; 
+            }
+
+            if(Input.GetKeyDown(taclaJump)){
+                WallJump();
+            }
+
+        }else if(saliendoPared){
+            if(pm.wallrunning){
+                StopWallRun();
+            }
+
+            if(contadorTiempoSalida > 0){
+                contadorTiempoSalida -= Time.deltaTime;
+            }
+            if(contadorTiempoSalida <= 0){
+                saliendoPared = false;
+            }
         }else{
             
             if(pm.wallrunning){
@@ -88,12 +127,15 @@ public class WallRunning : MonoBehaviour
     private void StartWallRun(){
         pm.wallrunning = true;
 
+        contadorWallRun = tiempoMaximoWallRun;
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
     }
 
     private void WallRunMov(){
 
-        rb.useGravity = false;
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.useGravity = useGravity;
+
 
         Vector3 wallNormal = paredDer ? derWallHit.normal : izqWallHit.normal;
         Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
@@ -117,6 +159,11 @@ public class WallRunning : MonoBehaviour
         if(!(paredIzq && horizontalInput > 0) && !(paredDer && horizontalInput < 0)){
             rb.AddForce(-wallNormal * 100, ForceMode.Force);  
         }
+
+        // Debilitar un poco la gravedad 
+        if(useGravity){
+            rb.AddForce(transform.up * antiGravedad, ForceMode.Force);
+        }
           
 
 
@@ -125,5 +172,16 @@ public class WallRunning : MonoBehaviour
     private void StopWallRun(){
         pm.wallrunning = false;
 
+    }
+
+    private void WallJump(){
+        saliendoPared = true;
+        contadorTiempoSalida = tiempoSalidaPared;
+        Vector3 wallNormal = paredDer ? derWallHit.normal : izqWallHit.normal;
+
+        Vector3 fuerza = transform.up * fuerzaUpWallJump + wallNormal * fuerzaSideWallJump;
+
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.AddForce(fuerza, ForceMode.Impulse);
     }
 }
