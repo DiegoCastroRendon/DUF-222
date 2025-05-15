@@ -37,7 +37,7 @@ public class MovimientoJugador : MonoBehaviour
     [Header("Check piso")]
     public float alturaJugador;
     public LayerMask piso;
-    bool tocandoPiso;
+    public bool tocandoPiso;
 
     public Transform orientacion;
      float inputHorizontal;
@@ -98,6 +98,7 @@ public class MovimientoJugador : MonoBehaviour
         }
 
         Debug.Log("TocandoPiso: " + tocandoPiso);
+        Debug.Log($"Velocidad asignada: X = {rb.velocity.x}, Y = {rb.velocity.y}, Z = {rb.velocity.z}");
         
     }
 
