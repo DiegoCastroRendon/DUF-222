@@ -52,19 +52,26 @@ public class MovimientoJugador : MonoBehaviour
 
     Rigidbody rb;
 
+    public bool restringido;
+
     public EstadoMovimiento estadoMovimieto;
 
     public enum EstadoMovimiento {
         caminando,
         corriendo,
+        congelado,
+        ilimidado,
         wallrunning,
         agachado,
         aire,
-        desliz
+        desliz,
     }
 
     public bool deslizandose;
     public bool wallrunning;
+
+    public bool congelado;
+    public bool ilimitado;
 
     // Start is called before the first frame update
     void Start()
@@ -136,6 +143,9 @@ public class MovimientoJugador : MonoBehaviour
 
     private void Movimiento() {
 
+
+        if(restringido) return;
+
         direccionMovimiento = (orientacion.forward * inputVertical) + (orientacion.right * inputHorizontal);
 
         if(EnPendiente() && !saliendoPendiente) {
@@ -190,6 +200,17 @@ public class MovimientoJugador : MonoBehaviour
     }
 
     private void ManejadorEstadoMovimiento() {
+
+        if( congelado ) {
+            estadoMovimieto = EstadoMovimiento.congelado;
+            rb.velocity = Vector3.zero;
+        }
+
+        if ( ilimitado ) {
+            estadoMovimieto = EstadoMovimiento.ilimidado;
+            velocidadMovimiento = 999f;
+            return;
+        }
 
         if(wallrunning){
             estadoMovimieto = EstadoMovimiento.wallrunning;
