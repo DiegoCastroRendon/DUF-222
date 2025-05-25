@@ -2325,6 +2325,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orientacion: {fileID: 868309555}
   rb: {fileID: 629833277}
+  eb: {fileID: 0}
   pm: {fileID: 629833276}
   esPared:
     serializedVersion: 2
@@ -2356,11 +2357,17 @@ MonoBehaviour:
   distanciaMaxSujetarBorde: 2
   tiempoMinEnBorde: 0.5
   sujetando: 0
+  salto: 32
+  fuerzaSaltoBordeAdelatne: 40
+  fuerzaSaltoBordeArriba: 40
   distanciaDeteccionBorde: 3
   radioEsferaCastBorde: 0.5
   esBorde:
     serializedVersion: 2
     m_Bits: 6144
+  saliendoBorde: 0
+  tiempoSalidaBorde: 1
+  contadorSaldaBorde: 0
 --- !u!1 &655277913
 GameObject:
   m_ObjectHideFlags: 0
