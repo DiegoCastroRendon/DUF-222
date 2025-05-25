@@ -10,6 +10,7 @@ public class Esclar : MonoBehaviour
 
     public Transform orientacion;
     public Rigidbody rb;
+    public EscaladaBordes eb;
     public MovimientoJugador pm;
     public LayerMask esPared;
 
@@ -31,6 +32,11 @@ public class Esclar : MonoBehaviour
     public bool paredFrente;
 
 
+    void Start()
+    {
+        eb = GetComponent<EscaladaBordes>();
+    }
+
     void Update()
     {
         ParedCheck();
@@ -43,13 +49,20 @@ public class Esclar : MonoBehaviour
     }
 
     private void MaquinaEstado() {
-        if (paredFrente && Input.GetKey(KeyCode.W) && anguloVisionPared < anguloMaximoVisionPared)
+        if (eb.sujetando)
+        {
+            if (escalando) PararEscalada();
+        }
+
+        else if (paredFrente && Input.GetKey(KeyCode.W) && anguloVisionPared < anguloMaximoVisionPared)
         {
             if (!escalando && contadorEscalada > 0) IniciarEscalada();
 
-            if(contadorEscalada > 0) contadorEscalada -= Time.deltaTime;
-            if(contadorEscalada < 0) PararEscalada();
-        } else {
+            if (contadorEscalada > 0) contadorEscalada -= Time.deltaTime;
+            if (contadorEscalada < 0) PararEscalada();
+        }
+        else
+        {
             if (escalando) PararEscalada();
         }
     }

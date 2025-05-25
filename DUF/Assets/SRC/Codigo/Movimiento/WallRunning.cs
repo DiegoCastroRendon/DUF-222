@@ -46,12 +46,14 @@ public class WallRunning : MonoBehaviour
     public CamaraFP cam;
     private MovimientoJugador pm;
     private Rigidbody rb;
+    private EscaladaBordes eb;
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         pm = GetComponent<MovimientoJugador>();
+        eb = GetComponent<EscaladaBordes>();
     }
 
     // Update is called once per frame
@@ -185,6 +187,8 @@ public class WallRunning : MonoBehaviour
     }
 
     private void WallJump(){
+        if (eb.sujetando || eb.saliendoBorde) return;
+
         saliendoPared = true;
         contadorTiempoSalida = tiempoSalidaPared;
         Vector3 wallNormal = paredDer ? derWallHit.normal : izqWallHit.normal;

@@ -103,10 +103,7 @@ public class MovimientoJugador : MonoBehaviour
         } else {
             rb.drag = 0f;
         }
-
-        Debug.Log("TocandoPiso: " + tocandoPiso);
-        Debug.Log($"Velocidad asignada: X = {rb.velocity.x}, Y = {rb.velocity.y}, Z = {rb.velocity.z}");
-        
+         
     }
 
     void FixedUpdate()
@@ -119,11 +116,6 @@ public class MovimientoJugador : MonoBehaviour
     private void Inputs() {
         inputHorizontal = Input.GetAxisRaw("Horizontal");
         inputVertical = Input.GetAxisRaw("Vertical");
-
-        if (Input.GetKey(teclaSalto))
-        {
-            Debug.Log("Tecla de salto presionada");
-        }
 
         if (Input.GetKey(teclaSalto) && puedeSaltar && tocandoPiso) {
             puedeSaltar = false;
@@ -206,19 +198,18 @@ public class MovimientoJugador : MonoBehaviour
             rb.velocity = Vector3.zero;
         }
 
-        if ( ilimitado ) {
+        else if ( ilimitado ) {
             estadoMovimieto = EstadoMovimiento.ilimidado;
             velocidadMovimiento = 999f;
             return;
         }
 
-        if(wallrunning){
+        else if(wallrunning){
             estadoMovimieto = EstadoMovimiento.wallrunning;
             velocidadMovimientoDeseada = velocidadWallRun;
         }
-        if(deslizandose && Input.GetKey(KeyCode.C)) {
+        else if(deslizandose && Input.GetKey(KeyCode.C)) {
             estadoMovimieto = EstadoMovimiento.desliz;
-            Debug.Log("Deslizandose");
             if(EnPendiente() && rb.velocity.y > 0f) {
                 velocidadMovimientoDeseada = velocidadDeslizamiento;
             } else {
@@ -226,12 +217,12 @@ public class MovimientoJugador : MonoBehaviour
             }
         }
 
-        if(Input.GetKey(teclaAgacharse)) {
+        else if(Input.GetKey(teclaAgacharse)) {
             estadoMovimieto = EstadoMovimiento.agachado;
             velocidadMovimientoDeseada = velocidadAgachado;
         }
 
-        if(tocandoPiso && Input.GetKey(teclaCorrer)){
+        else if(tocandoPiso && Input.GetKey(teclaCorrer)){
             estadoMovimieto = EstadoMovimiento.corriendo;
             velocidadMovimientoDeseada = velocidadCorriendo;
         }

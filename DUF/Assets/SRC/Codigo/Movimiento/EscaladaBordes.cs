@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class EscaladaBordes : MonoBehaviour
 {
@@ -19,6 +20,11 @@ public class EscaladaBordes : MonoBehaviour
 
     public bool sujetando;
 
+    [Header("Salto Entre Bordes")]
+    public KeyCode salto = KeyCode.Space;
+    public float fuerzaSaltoBordeAdelatne;
+    public float fuerzaSaltoBordeArriba;
+
     [Header("Deteccion de Bordes")]
     public float distanciaDeteccionBorde;
     public float radioEsferaCastBorde;
@@ -28,6 +34,11 @@ public class EscaladaBordes : MonoBehaviour
     private Transform bordeActual;
 
     private RaycastHit bordeHit;
+
+    [Header("Salida")]
+    public bool saliendoBorde;
+    public float tiempoSalidaBorde;
+    public float contadorSaldaBorde;
 
 
     void Update()
@@ -41,7 +52,12 @@ public class EscaladaBordes : MonoBehaviour
     private void DeteccionBordes() {
         bool bordeDetectado = Physics.SphereCast(transform.position, radioEsferaCastBorde, camara.forward, out bordeHit, distanciaDeteccionBorde, esBorde);
 
-        if(!bordeDetectado) return;
+        Debug.Log("Borde detectado: " + bordeDetectado);
+        {
+            
+        }
+        
+        if (!bordeDetectado) return;
 
         float distalciaAlBorde = Vector3.Distance(transform.position, bordeHit.transform.position);
 
@@ -63,12 +79,35 @@ public class EscaladaBordes : MonoBehaviour
 
             tiempoEnBorde += Time.deltaTime;
 
-            if(tiempoEnBorde > tiempoMinEnBorde && cualquirTeclaPrecionada) SalidaSujetandoBorde();
+            if (tiempoEnBorde > tiempoMinEnBorde && cualquirTeclaPrecionada) SalidaSujetandoBorde();
+
+            if (Input.GetKeyDown(salto)) SaltoBorde();
+        }
+        else if (saliendoBorde)
+        {
+            if (contadorSaldaBorde > 0) tiempoEnBorde -= Time.deltaTime;
+            else saliendoBorde = false;
         }
         
     }
 
-    private void EntradaSujetandoBorde() {
+    private void SaltoBorde()
+    {
+        SalidaSujetandoBorde();
+
+        Invoke(nameof(SaltoBordeDelay), 0.05f);
+    }
+
+    private void SaltoBordeDelay()
+    {
+        Vector3 fuarzaA = camara.forward * fuerzaSaltoBordeAdelatne + orientacion.up * fuerzaSaltoBordeArriba;
+
+        rb.velocity = Vector3.zero;
+        rb.AddForce(fuarzaA, ForceMode.Impulse);
+    }
+
+    private void EntradaSujetandoBorde()
+    {
         sujetando = true;
 
         pm.ilimitado = true;
@@ -82,9 +121,10 @@ public class EscaladaBordes : MonoBehaviour
     }
     private void CongelarRBEnBorde() {
         rb.useGravity = false;
+        Vector3 puntoRef = camara.position;
 
-        Vector3 direccionAlBorde = bordeActual.position - transform.position;
-        float distanciaAlBorde = Vector3.Distance(transform.position, bordeActual.position);
+        Vector3 direccionAlBorde = bordeActual.position - orientacion.position;
+        float distanciaAlBorde = Vector3.Distance(orientacion.position, bordeActual.position);
 
         if(distanciaAlBorde > 1f) {
 
@@ -101,8 +141,12 @@ public class EscaladaBordes : MonoBehaviour
         if(distanciaAlBorde > distanciaMaxSujetarBorde) SalidaSujetandoBorde();
     }
     private void SalidaSujetandoBorde() {
+        saliendoBorde = true;
+        contadorSaldaBorde = tiempoSalidaBorde;
+
         pm.restringido = false;
         pm.congelado = false;
+        pm.ilimitado = false;
 
         sujetando = false;
 
