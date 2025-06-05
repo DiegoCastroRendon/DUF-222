@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Grappling : MonoBehaviour
@@ -15,8 +16,12 @@ public class Grappling : MonoBehaviour
     [Header("Grappling")]
     public float maxGrappleDistance;
     public float grappleDelay;
+    public float overshootY;
+
+
 
     private Vector3 grapplePoint;
+
 
     [Header("Cooldown")]
     public float grapplingCd;
@@ -79,10 +84,17 @@ public class Grappling : MonoBehaviour
     private void ExecuteGrapple(){
         pm.congelado = false;
 
+        Vector3 lowGrapplePoint = new Vector3(transform.position.x, transform.position.y -1f , transform.position.z);
+        float grapplePointRelativeY = grapplePoint.y - lowGrapplePoint.y;
+        float highPoint = grapplePointRelativeY + overshootY;
+        if (grapplePointRelativeY < 0) highPoint = overshootY;
+        pm.JumpToPosition(grapplePoint, highPoint);
+        Invoke(nameof(EndGrapple), 1f);
+
     }
 
 
-    private void EndGrapple(){
+    public void EndGrapple(){
         pm.congelado = false;
         grappling = false;
         grapplingCdTimer = grapplingCd; 

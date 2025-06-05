@@ -2584,9 +2584,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   lr: {fileID: 396796397}
-  maxGrappleDistance: 25
+  maxGrappleDistance: 60
   grappleDelay: 0.25
-  grapplingCd: 2
+  overshootY: 1
+  grapplingCd: 1
   grapplingKey: 324
 --- !u!1 &655277913
 GameObject:

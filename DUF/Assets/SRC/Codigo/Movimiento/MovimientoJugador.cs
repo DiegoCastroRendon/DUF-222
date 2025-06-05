@@ -102,7 +102,7 @@ public class MovimientoJugador : MonoBehaviour
         ControlVelocidad();
         ManejadorEstadoMovimiento();
 
-        if(tocandoPiso) {
+        if(tocandoPiso && !activaGancho) {
             rb.drag = friccionPiso;
         } else {
             rb.drag = 0f;
@@ -207,16 +207,40 @@ public class MovimientoJugador : MonoBehaviour
             (Mathf.Sqrt(-2 * trajectoryHeight / gravity) + 
             Mathf.Sqrt(2 * (displacementY - trajectoryHeight) / gravity));
 
-        return velocityXZ + velocityY;
+        return (velocityXZ * 3 )+ velocityY ;
     }
 
 
+    private bool enableMovement;
     public void JumpToPosition(Vector3 targetPos, float height){
         activaGancho = true;
-        rb.velocity = CalculateJumpVelocity(transform.position,targetPos, height);
+        velocidadToSet = CalculateJumpVelocity(transform.position, targetPos, height);
+        Invoke(nameof(SetVelocidad), 0.1f);
+        Invoke(nameof(ResetRestrictions), 2f);
     }
 
-    
+    private Vector3 velocidadToSet;
+
+    private void SetVelocidad(){
+        enableMovement = true;
+        rb.velocity = velocidadToSet;
+    }
+
+    public void ResetRestrictions(){
+        activaGancho = false;
+    }
+
+    private void OllisionEnter(Collision collision)
+    {
+        if (enableMovement){
+            enableMovement = false;
+            ResetRestrictions();
+            GetComponent<Grappling>().EndGrapple();
+        }
+        
+    }
+
+
 
     private void ManejadorEstadoMovimiento() {
 
