@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -57,6 +58,8 @@ public class MovimientoJugador : MonoBehaviour
     public EstadoMovimiento estadoMovimieto;
 
     public enum EstadoMovimiento {
+        
+        
         caminando,
         corriendo,
         congelado,
@@ -66,7 +69,8 @@ public class MovimientoJugador : MonoBehaviour
         aire,
         desliz,
     }
-
+    
+    public bool activaGancho;
     public bool deslizandose;
     public bool wallrunning;
 
@@ -98,7 +102,7 @@ public class MovimientoJugador : MonoBehaviour
         ControlVelocidad();
         ManejadorEstadoMovimiento();
 
-        if(tocandoPiso) {
+        if(tocandoPiso && !activaGancho) {
             rb.drag = friccionPiso;
         } else {
             rb.drag = 0f;
@@ -135,6 +139,7 @@ public class MovimientoJugador : MonoBehaviour
 
     private void Movimiento() {
 
+        if(activaGancho) return;
 
         if(restringido) return;
 
@@ -162,6 +167,7 @@ public class MovimientoJugador : MonoBehaviour
     }
 
     private void ControlVelocidad() {
+        if(activaGancho) return;
 
         if(EnPendiente() && !saliendoPendiente) {
             if(rb.velocity.magnitude > velocidadMovimiento) {
@@ -191,10 +197,56 @@ public class MovimientoJugador : MonoBehaviour
         saliendoPendiente = false;
     }
 
+    public Vector3 CalculateJumpVelocity(Vector3 startPoint, Vector3 endPoint, float trajectoryHeight){
+        float gravity = Physics.gravity.y;
+        float displacementY = endPoint.y - startPoint.y;
+        Vector3 displacementXZ = new Vector3(endPoint.x - startPoint.x, 0f, endPoint.z - startPoint.z);
+
+        Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * trajectoryHeight);
+        Vector3 velocityXZ = displacementXZ / 
+            (Mathf.Sqrt(-2 * trajectoryHeight / gravity) + 
+            Mathf.Sqrt(2 * (displacementY - trajectoryHeight) / gravity));
+
+        return (velocityXZ * 2 )+ (velocityY * 1.5f) ;
+    }
+
+
+    private bool enableMovement;
+    public void JumpToPosition(Vector3 targetPos, float height){
+        activaGancho = true;
+        velocidadToSet = CalculateJumpVelocity(transform.position, targetPos, height);
+        Invoke(nameof(SetVelocidad), 0.1f);
+        Invoke(nameof(ResetRestrictions), 0f);
+    }
+
+    private Vector3 velocidadToSet;
+
+    private void SetVelocidad(){
+        enableMovement = true;
+        rb.velocity = velocidadToSet;
+    }
+
+    public void ResetRestrictions(){
+        activaGancho = false;
+    }
+
+    private void OllisionEnter(Collision collision)
+    {
+        if (enableMovement){
+            enableMovement = false;
+            ResetRestrictions();
+            GetComponent<Grappling>().EndGrapple();
+        }
+        
+    }
+
+
+
     private void ManejadorEstadoMovimiento() {
 
         if( congelado ) {
             estadoMovimieto = EstadoMovimiento.congelado;
+            velocidadMovimiento = 0;
             rb.velocity = Vector3.zero;
         }
 
