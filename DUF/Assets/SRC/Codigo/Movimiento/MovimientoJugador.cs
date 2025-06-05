@@ -37,7 +37,7 @@ public class MovimientoJugador : MonoBehaviour
     [Header("Check piso")]
     public float alturaJugador;
     public LayerMask piso;
-    bool tocandoPiso;
+    public bool tocandoPiso;
 
     public Transform orientacion;
      float inputHorizontal;
@@ -52,19 +52,26 @@ public class MovimientoJugador : MonoBehaviour
 
     Rigidbody rb;
 
+    public bool restringido;
+
     public EstadoMovimiento estadoMovimieto;
 
     public enum EstadoMovimiento {
         caminando,
         corriendo,
+        congelado,
+        ilimidado,
         wallrunning,
         agachado,
         aire,
-        desliz
+        desliz,
     }
 
     public bool deslizandose;
     public bool wallrunning;
+
+    public bool congelado;
+    public bool ilimitado;
 
     // Start is called before the first frame update
     void Start()
@@ -96,9 +103,7 @@ public class MovimientoJugador : MonoBehaviour
         } else {
             rb.drag = 0f;
         }
-
-        Debug.Log("TocandoPiso: " + tocandoPiso);
-        
+         
     }
 
     void FixedUpdate()
@@ -111,11 +116,6 @@ public class MovimientoJugador : MonoBehaviour
     private void Inputs() {
         inputHorizontal = Input.GetAxisRaw("Horizontal");
         inputVertical = Input.GetAxisRaw("Vertical");
-
-        if (Input.GetKey(teclaSalto))
-        {
-            Debug.Log("Tecla de salto presionada");
-        }
 
         if (Input.GetKey(teclaSalto) && puedeSaltar && tocandoPiso) {
             puedeSaltar = false;
@@ -134,6 +134,9 @@ public class MovimientoJugador : MonoBehaviour
     }
 
     private void Movimiento() {
+
+
+        if(restringido) return;
 
         direccionMovimiento = (orientacion.forward * inputVertical) + (orientacion.right * inputHorizontal);
 
@@ -190,13 +193,23 @@ public class MovimientoJugador : MonoBehaviour
 
     private void ManejadorEstadoMovimiento() {
 
-        if(wallrunning){
+        if( congelado ) {
+            estadoMovimieto = EstadoMovimiento.congelado;
+            rb.velocity = Vector3.zero;
+        }
+
+        else if ( ilimitado ) {
+            estadoMovimieto = EstadoMovimiento.ilimidado;
+            velocidadMovimiento = 999f;
+            return;
+        }
+
+        else if(wallrunning){
             estadoMovimieto = EstadoMovimiento.wallrunning;
             velocidadMovimientoDeseada = velocidadWallRun;
         }
-        if(deslizandose && Input.GetKey(KeyCode.C)) {
+        else if(deslizandose && Input.GetKey(KeyCode.C)) {
             estadoMovimieto = EstadoMovimiento.desliz;
-            Debug.Log("Deslizandose");
             if(EnPendiente() && rb.velocity.y > 0f) {
                 velocidadMovimientoDeseada = velocidadDeslizamiento;
             } else {
@@ -204,12 +217,12 @@ public class MovimientoJugador : MonoBehaviour
             }
         }
 
-        if(Input.GetKey(teclaAgacharse)) {
+        else if(Input.GetKey(teclaAgacharse)) {
             estadoMovimieto = EstadoMovimiento.agachado;
             velocidadMovimientoDeseada = velocidadAgachado;
         }
 
-        if(tocandoPiso && Input.GetKey(teclaCorrer)){
+        else if(tocandoPiso && Input.GetKey(teclaCorrer)){
             estadoMovimieto = EstadoMovimiento.corriendo;
             velocidadMovimientoDeseada = velocidadCorriendo;
         }
