@@ -207,7 +207,7 @@ public class MovimientoJugador : MonoBehaviour
             (Mathf.Sqrt(-2 * trajectoryHeight / gravity) + 
             Mathf.Sqrt(2 * (displacementY - trajectoryHeight) / gravity));
 
-        return (velocityXZ * 3 )+ velocityY ;
+        return (velocityXZ * 2 )+ (velocityY * 1.5f) ;
     }
 
 
@@ -216,7 +216,7 @@ public class MovimientoJugador : MonoBehaviour
         activaGancho = true;
         velocidadToSet = CalculateJumpVelocity(transform.position, targetPos, height);
         Invoke(nameof(SetVelocidad), 0.1f);
-        Invoke(nameof(ResetRestrictions), 2f);
+        Invoke(nameof(ResetRestrictions), 0f);
     }
 
     private Vector3 velocidadToSet;

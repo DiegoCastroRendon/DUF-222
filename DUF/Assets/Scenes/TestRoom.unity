@@ -7103,7 +7103,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1837107576, guid: e46b4d9b46acf7b4587237e61c0ae42d, type: 3}
       propertyPath: fuarzaSalto
-      value: 40
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1837107576, guid: e46b4d9b46acf7b4587237e61c0ae42d, type: 3}
       propertyPath: friccionPiso
@@ -7127,7 +7127,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1837107576, guid: e46b4d9b46acf7b4587237e61c0ae42d, type: 3}
       propertyPath: velocidadCaminando
-      value: 50
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 1837107576, guid: e46b4d9b46acf7b4587237e61c0ae42d, type: 3}
       propertyPath: velocidadCorriendo
