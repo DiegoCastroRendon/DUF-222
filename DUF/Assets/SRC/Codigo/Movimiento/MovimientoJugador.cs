@@ -4,9 +4,13 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class MovimientoJugador : MonoBehaviour
 {
+
+    [Header("Referencias")]
+    private PlayerInput playerInput;
 
     [Header("Movimiento")]
     private float velocidadMovimiento;
@@ -18,6 +22,8 @@ public class MovimientoJugador : MonoBehaviour
 
     private float velocidadMovimientoDeseada;
     private float ultimaVelocidadMovimientoDeseada;
+
+    private Vector2 input;
 
     [Header("Salto")]
     public float fuarzaSalto;
@@ -41,7 +47,7 @@ public class MovimientoJugador : MonoBehaviour
     public bool tocandoPiso;
 
     public Transform orientacion;
-     float inputHorizontal;
+    float inputHorizontal;
     float inputVertical;
 
     [Header("Manejador de pendientes")]
@@ -57,9 +63,10 @@ public class MovimientoJugador : MonoBehaviour
 
     public EstadoMovimiento estadoMovimieto;
 
-    public enum EstadoMovimiento {
-        
-        
+    public enum EstadoMovimiento
+    {
+
+
         caminando,
         corriendo,
         congelado,
@@ -69,7 +76,7 @@ public class MovimientoJugador : MonoBehaviour
         aire,
         desliz,
     }
-    
+
     public bool activaGancho;
     public bool deslizandose;
     public bool wallrunning;
@@ -80,6 +87,7 @@ public class MovimientoJugador : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerInput = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         rb.useGravity = true;
@@ -102,12 +110,15 @@ public class MovimientoJugador : MonoBehaviour
         ControlVelocidad();
         ManejadorEstadoMovimiento();
 
-        if(tocandoPiso && !activaGancho) {
+        if (tocandoPiso && !activaGancho)
+        {
             rb.drag = friccionPiso;
-        } else {
+        }
+        else
+        {
             rb.drag = 0f;
         }
-         
+
     }
 
     void FixedUpdate()
@@ -117,102 +128,137 @@ public class MovimientoJugador : MonoBehaviour
 
     }
 
-    private void Inputs() {
-        inputHorizontal = Input.GetAxisRaw("Horizontal");
-        inputVertical = Input.GetAxisRaw("Vertical");
+    public void Inputs()
+    {
+        // inputHorizontal = Input.GetAxisRaw("Horizontal");
+        // inputVertical = Input.GetAxisRaw("Vertical");
 
-        if (Input.GetKey(teclaSalto) && puedeSaltar && tocandoPiso) {
-            puedeSaltar = false;
-            Salto();
-            Invoke(nameof(ResetSalto), coolDownSalto);
-        }
-
-        if (Input.GetKeyDown(teclaAgacharse) ) {
-            transform.localScale = new Vector3(transform.localScale.x, escalaYAgachado, transform.localScale.z);
-            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
-        }
-
-        if (Input.GetKeyUp(teclaAgacharse) ) {
-            transform.localScale = new Vector3(transform.localScale.x, inicioEscalY, transform.localScale.z);
-        }
+        input = playerInput.actions["Moverse"].ReadValue<Vector2>();
     }
 
-    private void Movimiento() {
+    private void Movimiento()
+    {
 
-        if(activaGancho) return;
+        if (activaGancho) return;
 
-        if(restringido) return;
+        if (restringido) return;
 
-        direccionMovimiento = (orientacion.forward * inputVertical) + (orientacion.right * inputHorizontal);
+        direccionMovimiento = (orientacion.forward * input.y) + (orientacion.right * input.x);
 
-        if(EnPendiente() && !saliendoPendiente) {
+        if (EnPendiente() && !saliendoPendiente)
+        {
             rb.AddForce(20f * velocidadMovimiento * GetDireccionMovimientoPendiente(direccionMovimiento), ForceMode.Force);
 
-            if (rb.velocity.y > 0f) 
+            if (rb.velocity.y > 0f)
             {
                 rb.AddForce(Vector3.down * 80f, ForceMode.Force);
             }
         }
 
 
-        if(tocandoPiso)
+        if (tocandoPiso)
             rb.AddForce(10f * velocidadMovimiento * direccionMovimiento.normalized, ForceMode.Force);
 
         else if (!tocandoPiso)
             rb.AddForce(10f * multiplicadorAire * velocidadMovimiento * direccionMovimiento.normalized, ForceMode.Force);
 
-        if(wallrunning) rb.useGravity = !EnPendiente();
+        if (wallrunning) rb.useGravity = !EnPendiente();
 
 
     }
 
-    private void ControlVelocidad() {
-        if(activaGancho) return;
+    private void ControlVelocidad()
+    {
+        if (activaGancho) return;
 
-        if(EnPendiente() && !saliendoPendiente) {
-            if(rb.velocity.magnitude > velocidadMovimiento) {
+        if (EnPendiente() && !saliendoPendiente)
+        {
+            if (rb.velocity.magnitude > velocidadMovimiento)
+            {
                 rb.velocity = rb.velocity.normalized * velocidadMovimiento;
             }
-        } else  {
+        }
+        else
+        {
             Vector3 velPlana = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-            if(velPlana.magnitude > velocidadMovimiento) {
+            if (velPlana.magnitude > velocidadMovimiento)
+            {
                 Vector3 velLimite = velPlana.normalized * velocidadMovimiento;
                 rb.velocity = new Vector3(velLimite.x, rb.velocity.y, velLimite.z);
             }
         }
     }
 
-    private void Salto() {
-        saliendoPendiente = true;
+    public void Salto(InputAction.CallbackContext callbackContext)
+    {
+        if (callbackContext.performed && tocandoPiso)
+        {
+            puedeSaltar = false;
 
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            saliendoPendiente = true;
 
-        rb.AddForce(transform.up * fuarzaSalto, ForceMode.Impulse);
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            rb.AddForce(transform.up * fuarzaSalto, ForceMode.Impulse);
+            Invoke(nameof(ResetSalto), coolDownSalto);
+
+        }
+
     }
 
-    private void ResetSalto() {
+    public void Agacharce(InputAction.CallbackContext callbackContext)
+    {
+        if (callbackContext.started || callbackContext.performed)
+        {
+            transform.localScale = new Vector3(transform.localScale.x, escalaYAgachado, transform.localScale.z);
+            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+        }
+
+        if (callbackContext.canceled)
+        {
+            transform.localScale = new Vector3(transform.localScale.x, inicioEscalY, transform.localScale.z);
+        }
+    }
+
+    public void Correr(InputAction.CallbackContext callbackContext)
+    {
+        if (callbackContext.performed && tocandoPiso)
+        {
+            Debug.Log("Corriendo");
+            velocidadMovimientoDeseada = velocidadCorriendo;
+        }
+
+        if (callbackContext.canceled)
+        {
+            velocidadMovimientoDeseada = velocidadCaminando;
+        }
+    }
+
+    private void ResetSalto()
+    {
         puedeSaltar = true;
 
         saliendoPendiente = false;
     }
 
-    public Vector3 CalculateJumpVelocity(Vector3 startPoint, Vector3 endPoint, float trajectoryHeight){
+    public Vector3 CalculateJumpVelocity(Vector3 startPoint, Vector3 endPoint, float trajectoryHeight)
+    {
         float gravity = Physics.gravity.y;
         float displacementY = endPoint.y - startPoint.y;
         Vector3 displacementXZ = new Vector3(endPoint.x - startPoint.x, 0f, endPoint.z - startPoint.z);
 
         Vector3 velocityY = Vector3.up * Mathf.Sqrt(-2 * gravity * trajectoryHeight);
-        Vector3 velocityXZ = displacementXZ / 
-            (Mathf.Sqrt(-2 * trajectoryHeight / gravity) + 
+        Vector3 velocityXZ = displacementXZ /
+            (Mathf.Sqrt(-2 * trajectoryHeight / gravity) +
             Mathf.Sqrt(2 * (displacementY - trajectoryHeight) / gravity));
 
-        return (velocityXZ * 2 )+ (velocityY * 1.5f) ;
+        return (velocityXZ * 2) + (velocityY * 1.5f);
     }
 
 
     private bool enableMovement;
-    public void JumpToPosition(Vector3 targetPos, float height){
+    public void JumpToPosition(Vector3 targetPos, float height)
+    {
         activaGancho = true;
         velocidadToSet = CalculateJumpVelocity(transform.position, targetPos, height);
         Invoke(nameof(SetVelocidad), 0.1f);
@@ -221,77 +267,96 @@ public class MovimientoJugador : MonoBehaviour
 
     private Vector3 velocidadToSet;
 
-    private void SetVelocidad(){
+    private void SetVelocidad()
+    {
         enableMovement = true;
         rb.velocity = velocidadToSet;
     }
 
-    public void ResetRestrictions(){
+    public void ResetRestrictions()
+    {
         activaGancho = false;
     }
 
     private void OllisionEnter(Collision collision)
     {
-        if (enableMovement){
+        if (enableMovement)
+        {
             enableMovement = false;
             ResetRestrictions();
             GetComponent<Grappling>().EndGrapple();
         }
-        
+
     }
 
 
 
-    private void ManejadorEstadoMovimiento() {
+    private void ManejadorEstadoMovimiento()
+    {
 
-        if( congelado ) {
+
+        if (congelado)
+        {
             estadoMovimieto = EstadoMovimiento.congelado;
             velocidadMovimiento = 0;
             rb.velocity = Vector3.zero;
         }
 
-        else if ( ilimitado ) {
+        else if (ilimitado)
+        {
             estadoMovimieto = EstadoMovimiento.ilimidado;
             velocidadMovimiento = 999f;
             return;
         }
 
-        else if(wallrunning){
+        else if (wallrunning)
+        {
             estadoMovimieto = EstadoMovimiento.wallrunning;
             velocidadMovimientoDeseada = velocidadWallRun;
         }
-        else if(deslizandose && Input.GetKey(KeyCode.C)) {
+        else if (deslizandose && playerInput.actions["Deslizarse"].IsPressed())
+        {
             estadoMovimieto = EstadoMovimiento.desliz;
-            if(EnPendiente() && rb.velocity.y > 0f) {
+            if (EnPendiente() && rb.velocity.y > 0f)
+            {
                 velocidadMovimientoDeseada = velocidadDeslizamiento;
-            } else {
+            }
+            else
+            {
                 velocidadMovimientoDeseada = velocidadCorriendo;
             }
         }
 
-        else if(Input.GetKey(teclaAgacharse)) {
+        else if (playerInput.actions["Agacharse"].IsPressed())
+        {
             estadoMovimieto = EstadoMovimiento.agachado;
             velocidadMovimientoDeseada = velocidadAgachado;
         }
 
-        else if(tocandoPiso && Input.GetKey(teclaCorrer)){
+        else if (tocandoPiso && playerInput.actions["Correr"].IsPressed())
+        {
             estadoMovimieto = EstadoMovimiento.corriendo;
             velocidadMovimientoDeseada = velocidadCorriendo;
         }
 
-        else if(tocandoPiso) {
+        else if (tocandoPiso)
+        {
             estadoMovimieto = EstadoMovimiento.caminando;
             velocidadMovimientoDeseada = velocidadCaminando;
         }
 
-        else {
+        else
+        {
             estadoMovimieto = EstadoMovimiento.aire;
         }
 
-        if(Mathf.Abs(velocidadMovimientoDeseada - ultimaVelocidadMovimientoDeseada) > 4f && velocidadMovimiento != 0) {
+        if (Mathf.Abs(velocidadMovimientoDeseada - ultimaVelocidadMovimientoDeseada) > 4f && velocidadMovimiento != 0)
+        {
             StopAllCoroutines();
             StartCoroutine(PerdidadVelocidadMovimietnoSueave());
-        } else {
+        }
+        else
+        {
             velocidadMovimiento = velocidadMovimientoDeseada;
         }
 
@@ -299,12 +364,14 @@ public class MovimientoJugador : MonoBehaviour
 
     }
 
-    private IEnumerator PerdidadVelocidadMovimietnoSueave() {
+    private IEnumerator PerdidadVelocidadMovimietnoSueave()
+    {
         float tiempo = 0f;
         float diferencia = Mathf.Abs(velocidadMovimientoDeseada - velocidadMovimiento);
         float valorInical = velocidadMovimiento;
 
-        while(tiempo < diferencia) {
+        while (tiempo < diferencia)
+        {
             velocidadMovimiento = Mathf.Lerp(valorInical, velocidadMovimientoDeseada, tiempo / diferencia);
             yield return null;
         }
@@ -312,9 +379,10 @@ public class MovimientoJugador : MonoBehaviour
         velocidadMovimiento = velocidadMovimientoDeseada;
     }
 
-    public bool EnPendiente() {
-        if(Physics.Raycast(transform.position, Vector3.down, out tocandoPendiente, alturaJugador * 0.5f + 0.3f))
-         {
+    public bool EnPendiente()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out tocandoPendiente, alturaJugador * 0.5f + 0.3f))
+        {
             float anguloPendiente = Vector3.Angle(Vector3.up, tocandoPendiente.normal);
             return anguloPendiente < maxAunguloPendiente && anguloPendiente != 0f;
         }
@@ -322,7 +390,8 @@ public class MovimientoJugador : MonoBehaviour
         return false;
     }
 
-    public Vector3 GetDireccionMovimientoPendiente(Vector3 direccion) {
+    public Vector3 GetDireccionMovimientoPendiente(Vector3 direccion)
+    {
         return Vector3.ProjectOnPlane(direccion, tocandoPendiente.normal).normalized;
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class WallRunning : MonoBehaviour
 {
@@ -47,10 +48,13 @@ public class WallRunning : MonoBehaviour
     private MovimientoJugador pm;
     private Rigidbody rb;
     private EscaladaBordes eb;
+    private PlayerInput playerInput;
+    Vector2 input;
 
 
     void Start()
     {
+        playerInput = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
         pm = GetComponent<MovimientoJugador>();
         eb = GetComponent<EscaladaBordes>();
@@ -80,13 +84,13 @@ public class WallRunning : MonoBehaviour
     }
 
     private void Estados(){
-
+        input = playerInput.actions["Moverse"].ReadValue<Vector2>();
         //Controles
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
+        horizontalInput = input.y;
+        verticalInput = input.x;
 
-        runArriba = Input.GetKey(WallRunArriba);
-        runAbajo = Input.GetKey(WallRunAbajo);
+        //runArriba = Input.GetKey(WallRunArriba);
+        //runAbajo = Input.GetKey(WallRunAbajo);
 
         // Estado de wallrun
         if((paredIzq || paredDer) && verticalInput > 0 && SobreSuelo() && !saliendoPared){
@@ -104,7 +108,7 @@ public class WallRunning : MonoBehaviour
                 contadorTiempoSalida = tiempoSalidaPared; 
             }
 
-            if(Input.GetKeyDown(taclaJump)){
+            if(playerInput.actions["Saltar"].IsPressed()){
                 WallJump();
             }
 
@@ -156,10 +160,10 @@ public class WallRunning : MonoBehaviour
 
         rb.AddForce(wallForward * fuerzaWallRun, ForceMode.Force);
 
-        if(runArriba){
+        if(playerInput.actions["Correr"].IsPressed()){
             rb.velocity = new Vector3(rb.velocity.x, velocidadSubirPared, rb.velocity.z); 
         }
-        if(runAbajo){
+        if(playerInput.actions["Agacharse"].IsPressed()){
             rb.velocity = new Vector3(rb.velocity.x, -velocidadSubirPared, rb.velocity.z); 
         }
 

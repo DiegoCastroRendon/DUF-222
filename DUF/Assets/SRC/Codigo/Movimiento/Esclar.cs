@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
 public class Esclar : MonoBehaviour
@@ -13,6 +14,8 @@ public class Esclar : MonoBehaviour
     public EscaladaBordes eb;
     public MovimientoJugador pm;
     public LayerMask esPared;
+
+    private PlayerInput playerInput;
 
     [Header("Escalada")]
     public float velocidadEscalada;
@@ -34,6 +37,7 @@ public class Esclar : MonoBehaviour
 
     void Start()
     {
+        playerInput = GetComponent<PlayerInput>();
         eb = GetComponent<EscaladaBordes>();
     }
 
@@ -54,7 +58,7 @@ public class Esclar : MonoBehaviour
             if (escalando) PararEscalada();
         }
 
-        else if (paredFrente && Input.GetKey(KeyCode.W) && anguloVisionPared < anguloMaximoVisionPared)
+        else if (paredFrente && playerInput.actions["Moverse"].IsPressed() && anguloVisionPared < anguloMaximoVisionPared)
         {
             if (!escalando && contadorEscalada > 0) IniciarEscalada();
 

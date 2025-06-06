@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
 public class EscaladaBordes : MonoBehaviour
@@ -10,6 +11,8 @@ public class EscaladaBordes : MonoBehaviour
     public Transform orientacion;
     public Transform camara;
     public Rigidbody rb;
+    private PlayerInput playerInput;
+    private Vector2 input;
 
     [Header("Sujetar Bordes")]
     public float velocidadMovABorde;
@@ -41,6 +44,11 @@ public class EscaladaBordes : MonoBehaviour
     public float contadorSaldaBorde;
 
 
+    void Start()
+    {
+        playerInput = GetComponent<PlayerInput>();
+    }
+
     void Update()
     {
         DeteccionBordes();
@@ -69,8 +77,11 @@ public class EscaladaBordes : MonoBehaviour
     }
 
     private void MaquinaEstado() {
-        float inputHorizontal = Input.GetAxisRaw("Horizontal");
-        float inputVertical = Input.GetAxisRaw("Vertical");
+        input = playerInput.actions["Moverse"].ReadValue<Vector2>();
+
+        float inputHorizontal = input.y;
+        float inputVertical = input.x;
+
         bool cualquirTeclaPrecionada = inputHorizontal != 0 || inputVertical != 0;
 
         if (sujetando)
@@ -81,7 +92,7 @@ public class EscaladaBordes : MonoBehaviour
 
             if (tiempoEnBorde > tiempoMinEnBorde && cualquirTeclaPrecionada) SalidaSujetandoBorde();
 
-            if (Input.GetKeyDown(salto)) SaltoBorde();
+            if (playerInput.actions["Saltar"].IsPressed()) SaltoBorde();
         }
         else if (saliendoBorde)
         {
@@ -91,7 +102,7 @@ public class EscaladaBordes : MonoBehaviour
         
     }
 
-    private void SaltoBorde()
+    public void SaltoBorde()
     {
         SalidaSujetandoBorde();
 

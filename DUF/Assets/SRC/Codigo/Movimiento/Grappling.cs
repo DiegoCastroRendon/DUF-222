@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Grappling : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class Grappling : MonoBehaviour
     public Transform gunTip;
     public LayerMask whatIsGrappleable;
     public LineRenderer lr;
+    private PlayerInput playerInput;
 
 
     [Header("Grappling")]
@@ -35,6 +37,7 @@ public class Grappling : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerInput = GetComponent<PlayerInput>();
         pm = GetComponent<MovimientoJugador>();
         grapplingCdTimer = grapplingCd;
         
@@ -44,7 +47,6 @@ public class Grappling : MonoBehaviour
     void Update()
     {
 
-        if(Input.GetKeyDown(grapplingKey)) StartGrapple();
         
         if(grapplingCdTimer > 0){
             grapplingCdTimer -= Time.deltaTime;
@@ -61,23 +63,27 @@ public class Grappling : MonoBehaviour
         }
     }
 
-    private void StartGrapple(){
-        if (grapplingCdTimer > 0) return;
-        grappling = true;
-        pm.congelado = true;
+    public void StartGrapple(InputAction.CallbackContext callbackContext)
+    {
+        if (callbackContext.started)
+        {
+            if (grapplingCdTimer > 0) return;
+            grappling = true;
+            pm.congelado = true;
 
-        RaycastHit hit;
-        if (Physics.Raycast(cam.position, cam.forward, out hit, maxGrappleDistance, whatIsGrappleable)){
-            grapplePoint = hit.point;
+            RaycastHit hit;
+            if (Physics.Raycast(cam.position, cam.forward, out hit, maxGrappleDistance, whatIsGrappleable)){
+                grapplePoint = hit.point;
 
-            Invoke(nameof(ExecuteGrapple), grappleDelay);
-        }else{
-            grapplePoint = cam.position + cam.forward * maxGrappleDistance;
-            Invoke(nameof(EndGrapple), grappleDelay);
+                Invoke(nameof(ExecuteGrapple), grappleDelay);
+            }else{
+                grapplePoint = cam.position + cam.forward * maxGrappleDistance;
+                Invoke(nameof(EndGrapple), grappleDelay);
+            }
+
+            lr.enabled = true;
+            lr.SetPosition(1, grapplePoint);
         }
-
-        lr.enabled = true;
-        lr.SetPosition(1, grapplePoint);
 
     }
 
