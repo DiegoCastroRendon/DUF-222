@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
 public class Deslizamiento : MonoBehaviour
@@ -11,6 +12,9 @@ public class Deslizamiento : MonoBehaviour
     public Transform playerObj;
     private Rigidbody rb;
     private MovimientoJugador pm;
+
+    private PlayerInput playerInput;
+    private Vector2 input;
 
     [Header("Deslizamiento")]
     public float tiempoMaxDeslizamiento;
@@ -36,6 +40,7 @@ public class Deslizamiento : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         pm = GetComponent<MovimientoJugador>();
+        playerInput = GetComponent<PlayerInput>();
 
         escalaInicalY = playerObj.localScale.y;
     }
@@ -43,10 +48,11 @@ public class Deslizamiento : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        inputHorizontal = Input.GetAxisRaw("Horizontal");
-        inputVeritical = Input.GetAxisRaw("Vertical");
+        Inputs();
 
-        if(Input.GetKeyDown(teclaDeslizamiento) && (inputHorizontal != 0 || inputVeritical != 0) && puedeDeslizarse) {
+        /**
+        if (Input.GetKeyDown(teclaDeslizamiento) && (input.y != 0 || input.x != 0) && puedeDeslizarse)
+        {
             InicarDeslizamiento();
 
         }
@@ -54,6 +60,7 @@ public class Deslizamiento : MonoBehaviour
         if(Input.GetKeyUp(teclaDeslizamiento) && pm.deslizandose) {
             DetenerDeslizamiento();
         }
+        */
     }
 
     void FixedUpdate()
@@ -62,39 +69,30 @@ public class Deslizamiento : MonoBehaviour
             MovimietoDeslizamiento();
         }
     }
-    private void MovimietoDeslizamiento() {
-    
-        Vector3 direccionInput = orientacion.forward * inputVeritical + orientacion.right * inputHorizontal;
+    public void InicarDeslizamiento(InputAction.CallbackContext callbackContext)
+    {
 
-        if(!pm.EnPendiente() || rb.velocity.y > -0.0f) {
+        if (callbackContext.performed && puedeDeslizarse)
+        {
 
-        rb.AddForce(direccionInput.normalized * fuerzaDeslizamiento, ForceMode.Force);
+            pm.deslizandose = true;
+            puedeDeslizarse = false;
 
-        contadorDeslizamiento -= Time.deltaTime;
+            rb.drag = 0f;
 
-        } else {
-            rb.AddForce(pm.GetDireccionMovimientoPendiente(direccionInput)* fuerzaDeslizamiento, ForceMode.Force);
+            playerObj.localScale = new Vector3(playerObj.localScale.x, escalaYDeslizamiento, playerObj.localScale.z);
+            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+
+            contadorDeslizamiento = tiempoMaxDeslizamiento;
+
+            Invoke(nameof(ReiniciarDeslizamiento), coolDownDeslizamiento);
         }
-
-
-        if(contadorDeslizamiento <= 0) {
+        
+        if (callbackContext.canceled)
+        {
             DetenerDeslizamiento();
         }
-    
-    }
-    private void InicarDeslizamiento() {
         
-        pm.deslizandose = true;
-        puedeDeslizarse = false;
-
-        rb.drag = 0f;
-
-        playerObj.localScale = new Vector3(playerObj.localScale.x, escalaYDeslizamiento, playerObj.localScale.z);
-        rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
-
-        contadorDeslizamiento = tiempoMaxDeslizamiento;
-
-        Invoke(nameof(ReiniciarDeslizamiento), coolDownDeslizamiento);
         
     }
     private void DetenerDeslizamiento()
@@ -106,5 +104,38 @@ public class Deslizamiento : MonoBehaviour
 
     private void ReiniciarDeslizamiento() {
         puedeDeslizarse = true;
+    }
+    
+    public void Inputs()
+    {
+        // inputHorizontal = Input.GetAxisRaw("Horizontal");
+        // inputVertical = Input.GetAxisRaw("Vertical");
+
+        input = playerInput.actions["Moverse"].ReadValue<Vector2>();
+    }
+    private void MovimietoDeslizamiento()
+    {
+
+        Vector3 direccionInput = orientacion.forward * input.x + orientacion.right * input.y;
+
+        if (!pm.EnPendiente() || rb.velocity.y > -0.0f)
+        {
+
+            rb.AddForce(direccionInput.normalized * fuerzaDeslizamiento, ForceMode.Force);
+
+            contadorDeslizamiento -= Time.deltaTime;
+
+        }
+        else
+        {
+            rb.AddForce(pm.GetDireccionMovimientoPendiente(direccionInput) * fuerzaDeslizamiento, ForceMode.Force);
+        }
+
+
+        if (contadorDeslizamiento <= 0)
+        {
+            DetenerDeslizamiento();
+        }
+
     }
 }

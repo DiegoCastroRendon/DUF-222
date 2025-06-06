@@ -2589,6 +2589,141 @@ MonoBehaviour:
   overshootY: 1
   grapplingCd: 1
   grapplingKey: 324
+--- !u!114 &629833284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629833269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: c4540d5b409fb524eb3ff57aa209d183,
+    type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 629833276}
+        m_TargetAssemblyTypeName: MovimientoJugador, Assembly-CSharp
+        m_MethodName: Salto
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 03b88e56-e3c4-45f9-acf4-144b35c5de0a
+    m_ActionName: Jugador/Saltar[/XInputControllerWindows/buttonSouth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c2311223-11bc-4723-a823-7666005cd9d4
+    m_ActionName: Jugador/New action
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 629833276}
+        m_TargetAssemblyTypeName: MovimientoJugador, Assembly-CSharp
+        m_MethodName: Agacharce
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 629833269}
+        m_TargetAssemblyTypeName: MovimientoJugador, Assembly-CSharp
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b0454d7c-634b-49f9-8242-ebc1e9e832cc
+    m_ActionName: Jugador/New action
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 629833273}
+        m_TargetAssemblyTypeName: Deslizamiento, Assembly-CSharp
+        m_MethodName: InicarDeslizamiento
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 01f1c27d-5354-42c1-95ac-3c08d2c5f6c0
+    m_ActionName: Jugador/Deslizarse[/XInputControllerWindows/rightStickPress]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 629833276}
+        m_TargetAssemblyTypeName: MovimientoJugador, Assembly-CSharp
+        m_MethodName: Correr
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: cbf289b7-f016-4a37-be4f-9caa66e4ad42
+    m_ActionName: Jugador/New action
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: dd891a24-4fdd-4300-a92a-0112c931b4e1
+    m_ActionName: Jugador/Camara[/XInputControllerWindows/rightStick]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 629833282}
+        m_TargetAssemblyTypeName: Grappling, Assembly-CSharp
+        m_MethodName: StartGrapple
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 6ad0f745-41e7-4c20-b9b2-763db4b43054
+    m_ActionName: Jugador/New action
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 21e372fa-cc2f-449c-b8b9-d113b473ea52
+    m_ActionName: Jugador/SaltoBorde[/XInputControllerWindows/buttonSouth]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Jugador
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &655277913
 GameObject:
   m_ObjectHideFlags: 0
@@ -7103,7 +7238,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1837107576, guid: e46b4d9b46acf7b4587237e61c0ae42d, type: 3}
       propertyPath: fuarzaSalto
-      value: 20
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 1837107576, guid: e46b4d9b46acf7b4587237e61c0ae42d, type: 3}
       propertyPath: friccionPiso
@@ -7145,6 +7280,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: JugadorFP
+      objectReference: {fileID: 0}
+    - target: {fileID: 2039431288590027050, guid: e46b4d9b46acf7b4587237e61c0ae42d,
+        type: 3}
+      propertyPath: m_Direction
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3002979726128807225, guid: e46b4d9b46acf7b4587237e61c0ae42d,
+        type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4612500570201585525, guid: e46b4d9b46acf7b4587237e61c0ae42d,
         type: 3}
@@ -7391,6 +7536,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CamaraFPHolder
+      objectReference: {fileID: 0}
+    - target: {fileID: 5766725942392016232, guid: 12930fef91ff7ce40a93891e496a0ca1,
+        type: 3}
+      propertyPath: sensX
+      value: 8000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5766725942392016232, guid: 12930fef91ff7ce40a93891e496a0ca1,
+        type: 3}
+      propertyPath: sensY
+      value: 8000
       objectReference: {fileID: 0}
     - target: {fileID: 5766725942392016232, guid: 12930fef91ff7ce40a93891e496a0ca1,
         type: 3}

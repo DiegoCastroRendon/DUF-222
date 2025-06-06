@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using DG.Tweening;
 
 
@@ -8,6 +9,8 @@ public class CamaraFP : MonoBehaviour
 {
     public float sensX;
     public float sensY;
+    private PlayerInput playerInput;
+    private Vector2 input;
 
     public Transform orientation;
     public Transform camHolder;
@@ -17,14 +20,20 @@ public class CamaraFP : MonoBehaviour
 
     void Start()
     {
+        playerInput = FindObjectOfType<PlayerInput>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     void Update()
     {
-        float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
+        input = playerInput.actions["Camara"].ReadValue<Vector2>();
+
+        float mouseX = input.x;
+        float mouseY = input.y;
+
+        //float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
+        //float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
 
         rotacionY += mouseX;
 
