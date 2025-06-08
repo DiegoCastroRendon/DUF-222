@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text timerText;        //TextMeshPro que muestre el temporizador
     public GameObject resultPanel;    // panel de jugador ganador
     public TMP_Text resultText;       // texto dentro de resultPanel que dice "el perico donde quiera es verde"
+    public Image resultImage;         // imagen de resultado
 
     [Header("Configuracion de tiempo")]
     public float raceDuration = 60f;  // 1 minuto
@@ -99,8 +101,11 @@ public class GameManager : MonoBehaviour
         resultPanel.SetActive(true);
         resultText.text = $"¡Ganó el Jugador {playerNumber}!";
 
+        resultImage.gameObject.SetActive(true);
+
     }
 
+    // aun por probar con el puntaje de los dos jugadores REVISAR
     private void DeclareTie()
     {
         isRaceOver = true;
@@ -108,5 +113,19 @@ public class GameManager : MonoBehaviour
 
         resultPanel.SetActive(true);
         resultText.text = "¡Empate!";
+    }
+
+    // revancha
+    public void ReplayRace()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(1);
+    }
+
+    // salir
+    public void ExitToMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(0); 
     }
 }
