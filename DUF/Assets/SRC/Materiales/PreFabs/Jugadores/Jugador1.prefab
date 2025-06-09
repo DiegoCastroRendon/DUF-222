@@ -45,6 +45,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: JugadorFP1
       objectReference: {fileID: 0}
+    - target: {fileID: 1535469847038641981, guid: e46b4d9b46acf7b4587237e61c0ae42d,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 4873867661805459379, guid: e46b4d9b46acf7b4587237e61c0ae42d,
         type: 3}
       propertyPath: cam
@@ -132,6 +137,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e46b4d9b46acf7b4587237e61c0ae42d, type: 3}
+--- !u!1 &2169848524889420962 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1535469847038641981, guid: e46b4d9b46acf7b4587237e61c0ae42d,
+    type: 3}
+  m_PrefabInstance: {fileID: 816220311048401823}
+  m_PrefabAsset: {fileID: 0}
+--- !u!136 &1505854794
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2169848524889420962}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1505854793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2169848524889420962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80af0dc9494371c41ad823458de0fefc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &5793364320324369098 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6572412307822119253, guid: e46b4d9b46acf7b4587237e61c0ae42d,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,13 +17,14 @@ public class GameManager : MonoBehaviour
     public TMP_Text timerText;        //TextMeshPro que muestre el temporizador
     public GameObject resultPanel;    // panel de jugador ganador
     public TMP_Text resultText;       // texto dentro de resultPanel que dice "el perico donde quiera es verde"
+    public Image resultImage;         // imagen de resultado
 
     [Header("Configuracion de tiempo")]
     public float raceDuration = 60f;  // 1 minuto
     private float timeRemaining;
     private bool isRaceOver = false;
 
-    private void Start()
+    private IEnumerator Start()
     {
         // inicializamos el tiempo de la carrera
         timeRemaining = raceDuration;
@@ -32,6 +34,18 @@ public class GameManager : MonoBehaviour
 
         // Asegurarnos de que el juego no este en pausa
         Time.timeScale = 1f;
+
+        
+        yield return new WaitUntil(() => FindObjectsOfType<PlayerScore>().Length >= 2);
+
+        var scores = FindObjectsOfType<PlayerScore>();
+        player2Score = scores[0];
+        player1Score = scores[1];
+
+        // Inicializa UI y tiempo...
+        resultPanel.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible   = false;
     }
 
     private void Update()
@@ -75,11 +89,13 @@ public class GameManager : MonoBehaviour
         int p2 = player2Score.currentScore;
 
         if (p1 > p2)
+
             DeclareWinner(1);
         else if (p2 > p1)
             DeclareWinner(2);
         else
-            DeclareTie(); 
+            DeclareTie();
+
     }
 
     // Llamada de FinishLine para cunado un jugador toca la meta o el objeto de meta
@@ -94,13 +110,19 @@ public class GameManager : MonoBehaviour
     private void DeclareWinner(int playerNumber)
     {
         isRaceOver = true;
-        Time.timeScale = 0f; 
+        Time.timeScale = 0f;
 
         resultPanel.SetActive(true);
         resultText.text = $"¡Ganó el Jugador {playerNumber}!";
 
+        resultImage.gameObject.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
     }
 
+    // aun por probar con el puntaje de los dos jugadores REVISAR
     private void DeclareTie()
     {
         isRaceOver = true;
@@ -109,4 +131,19 @@ public class GameManager : MonoBehaviour
         resultPanel.SetActive(true);
         resultText.text = "¡Empate!";
     }
+
+    // revancha
+    public void ReplayRace()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(1);
+    }
+
+    // salir
+    public void ExitToMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(0);
+    }
+    
 }

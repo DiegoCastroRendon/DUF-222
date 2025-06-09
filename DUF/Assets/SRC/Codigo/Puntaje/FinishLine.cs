@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FinishLine : MonoBehaviour
 {
-    // victoria instantanea
+    // victoria
     public GameManager gameManager;
 
     private void OnTriggerEnter(Collider other)
@@ -15,8 +15,8 @@ public class FinishLine : MonoBehaviour
             PlayerScore ps = other.GetComponent<PlayerScore>();
             if (ps != null)
             {
-                // linea de meta gana
-                if (ps.gameObject.name.Contains("JugadorFP"))
+                // objeto de meta gana
+                if (ps.gameObject.name.Contains("JugadorFP1"))
                     gameManager.OnPlayerFinish(1);
                 else if (ps.gameObject.name.Contains("JugadorFP2"))
                     gameManager.OnPlayerFinish(2);
