@@ -459,7 +459,7 @@ MonoBehaviour:
   resultPanel: {fileID: 915308963}
   resultText: {fileID: 1745239351}
   resultImage: {fileID: 911905491}
-  raceDuration: 60
+  raceDuration: 5
 --- !u!4 &99319150
 Transform:
   m_ObjectHideFlags: 0
@@ -7070,6 +7070,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80af0dc9494371c41ad823458de0fefc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!136 &1505854794
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1505854792}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1518667173
 GameObject:
   m_ObjectHideFlags: 0
@@ -9016,28 +9030,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1956395740}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &2011257670 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2094645046522235468, guid: ff6a0e53f5192e942842af926ab525fb,
-    type: 3}
-  m_PrefabInstance: {fileID: 355041249}
-  m_PrefabAsset: {fileID: 0}
---- !u!54 &2011257676
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2011257670}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &2014187667
 GameObject:
   m_ObjectHideFlags: 0
@@ -9538,6 +9530,21 @@ PrefabInstance:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 99319149}
+    - target: {fileID: 2086402391686945461, guid: 7765303f74dcd2642a5796ec513930be,
+        type: 3}
+      propertyPath: m_Height
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2086402391686945461, guid: 7765303f74dcd2642a5796ec513930be,
+        type: 3}
+      propertyPath: m_Radius
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2086402391686945461, guid: 7765303f74dcd2642a5796ec513930be,
+        type: 3}
+      propertyPath: m_Direction
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2086402391686945463, guid: 7765303f74dcd2642a5796ec513930be,
         type: 3}
       propertyPath: m_Name

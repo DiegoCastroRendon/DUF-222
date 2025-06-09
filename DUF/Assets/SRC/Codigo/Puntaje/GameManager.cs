@@ -77,11 +77,13 @@ public class GameManager : MonoBehaviour
         int p2 = player2Score.currentScore;
 
         if (p1 > p2)
+
             DeclareWinner(1);
         else if (p2 > p1)
             DeclareWinner(2);
         else
             DeclareTie(); 
+        
     }
 
     // Llamada de FinishLine para cunado un jugador toca la meta o el objeto de meta
@@ -94,14 +96,17 @@ public class GameManager : MonoBehaviour
     }
 
     private void DeclareWinner(int playerNumber)
-    {
+    {   
         isRaceOver = true;
-        Time.timeScale = 0f; 
+        Time.timeScale = 0f;
 
         resultPanel.SetActive(true);
         resultText.text = $"¡Ganó el Jugador {playerNumber}!";
 
         resultImage.gameObject.SetActive(true);
+        
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible   = true;
 
     }
 
