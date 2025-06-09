@@ -27,6 +27,11 @@ public class StartMenuController : MonoBehaviour
         SceneManager.LoadScene(3);
     }
 
+    public void rules()
+    {
+        SceneManager.LoadScene(5);
+    }
+
     public void QuitGame()
     {
 #if UNITY_EDITOR

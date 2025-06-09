@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SelectMaps.unity
     guid: a29be41e390dd434f8aaf6dc83a9ba80
+  - enabled: 1
+    path: Assets/Scenes/Rules.unity
+    guid: 0c28daf2a04d26d4480d316a4696c61e
   m_configObjects: {}
