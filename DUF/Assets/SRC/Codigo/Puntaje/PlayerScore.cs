@@ -7,6 +7,7 @@ public class PlayerScore : MonoBehaviour
     public int currentScore { get; private set; } = 0;
     public void AddPoints(int points)
     {
+        Debug.Log("Suma puntos");
         currentScore += points;
     }
 }

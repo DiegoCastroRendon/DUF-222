@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     private float timeRemaining;
     private bool isRaceOver = false;
 
-    private void Start()
+    private IEnumerator Start()
     {
         // inicializamos el tiempo de la carrera
         timeRemaining = raceDuration;
@@ -34,6 +34,18 @@ public class GameManager : MonoBehaviour
 
         // Asegurarnos de que el juego no este en pausa
         Time.timeScale = 1f;
+
+        
+        yield return new WaitUntil(() => FindObjectsOfType<PlayerScore>().Length >= 2);
+
+        var scores = FindObjectsOfType<PlayerScore>();
+        player2Score = scores[0];
+        player1Score = scores[1];
+
+        // Inicializa UI y tiempo...
+        resultPanel.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible   = false;
     }
 
     private void Update()
@@ -82,8 +94,8 @@ public class GameManager : MonoBehaviour
         else if (p2 > p1)
             DeclareWinner(2);
         else
-            DeclareTie(); 
-        
+            DeclareTie();
+
     }
 
     // Llamada de FinishLine para cunado un jugador toca la meta o el objeto de meta
@@ -96,7 +108,7 @@ public class GameManager : MonoBehaviour
     }
 
     private void DeclareWinner(int playerNumber)
-    {   
+    {
         isRaceOver = true;
         Time.timeScale = 0f;
 
@@ -104,9 +116,9 @@ public class GameManager : MonoBehaviour
         resultText.text = $"¡Ganó el Jugador {playerNumber}!";
 
         resultImage.gameObject.SetActive(true);
-        
+
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible   = true;
+        Cursor.visible = true;
 
     }
 
@@ -131,6 +143,7 @@ public class GameManager : MonoBehaviour
     public void ExitToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(0); 
+        SceneManager.LoadScene(0);
     }
+    
 }

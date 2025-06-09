@@ -459,7 +459,7 @@ MonoBehaviour:
   resultPanel: {fileID: 915308963}
   resultText: {fileID: 1745239351}
   resultImage: {fileID: 911905491}
-  raceDuration: 5
+  raceDuration: 60
 --- !u!4 &99319150
 Transform:
   m_ObjectHideFlags: 0
@@ -1979,7 +1979,7 @@ PrefabInstance:
     - target: {fileID: 4111066093358560818, guid: ff6a0e53f5192e942842af926ab525fb,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4111066093358560818, guid: ff6a0e53f5192e942842af926ab525fb,
         type: 3}
@@ -2585,8 +2585,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190335
-  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
+    rgba: 4293933056
+  m_fontColor: {r: 0, g: 0.21960786, b: 0.94117653, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2914,8 +2914,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294935808
-  m_fontColor: {r: 0, g: 0.5202923, b: 1, a: 1}
+    rgba: 4278911231
+  m_fontColor: {r: 1, g: 0, b: 0.04131365, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -4447,7 +4447,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &981439478
 GameObject:
@@ -6980,20 +6980,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2169848524889420962, guid: d023f0607b1726746a208221527071aa,
-        type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
     - target: {fileID: 2950570911731334357, guid: d023f0607b1726746a208221527071aa,
         type: 3}
       propertyPath: m_Name
       value: Jugador1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2950570911731334357, guid: d023f0607b1726746a208221527071aa,
-        type: 3}
-      propertyPath: m_TagString
-      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 8462375264568574628, guid: d023f0607b1726746a208221527071aa,
         type: 3}
@@ -7052,38 +7042,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d023f0607b1726746a208221527071aa, type: 3}
---- !u!1 &1505854792 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2169848524889420962, guid: d023f0607b1726746a208221527071aa,
+--- !u!114 &1505854793 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1505854793, guid: d023f0607b1726746a208221527071aa,
     type: 3}
   m_PrefabInstance: {fileID: 1505854791}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1505854793
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1505854792}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 80af0dc9494371c41ad823458de0fefc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!136 &1505854794
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1505854792}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1518667173
 GameObject:
   m_ObjectHideFlags: 0
@@ -7603,6 +7573,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1667819648}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1709324338 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7700997437450125111, guid: 2865cdc2c23336043a0f8d301c4051e6,
+    type: 3}
+  m_PrefabInstance: {fileID: 7700997437825393607}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1735344144
 GameObject:
   m_ObjectHideFlags: 0
@@ -9296,7 +9272,7 @@ Transform:
   - {fileID: 1762509991}
   - {fileID: 1206813649}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2102722511
 GameObject:
@@ -9562,7 +9538,7 @@ PrefabInstance:
     - target: {fileID: 7700997437450125109, guid: 2865cdc2c23336043a0f8d301c4051e6,
         type: 3}
       propertyPath: m_RootOrder
-      value: 14
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 7700997437450125109, guid: 2865cdc2c23336043a0f8d301c4051e6,
         type: 3}
@@ -9613,6 +9589,46 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7700997437450125110, guid: 2865cdc2c23336043a0f8d301c4051e6,
+        type: 3}
+      propertyPath: m_AllowJoining
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7700997437450125110, guid: 2865cdc2c23336043a0f8d301c4051e6,
+        type: 3}
+      propertyPath: m_JoinBehavior
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7700997437450125110, guid: 2865cdc2c23336043a0f8d301c4051e6,
+        type: 3}
+      propertyPath: m_NotificationBehavior
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7700997437450125110, guid: 2865cdc2c23336043a0f8d301c4051e6,
+        type: 3}
+      propertyPath: m_JoinAction.m_Action.m_Name
+      value: Join
+      objectReference: {fileID: 0}
+    - target: {fileID: 7700997437450125110, guid: 2865cdc2c23336043a0f8d301c4051e6,
+        type: 3}
+      propertyPath: m_PlayerJoinedEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7700997437450125110, guid: 2865cdc2c23336043a0f8d301c4051e6,
+        type: 3}
+      propertyPath: m_PlayerJoinedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7700997437450125110, guid: 2865cdc2c23336043a0f8d301c4051e6,
+        type: 3}
+      propertyPath: m_PlayerJoinedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1709324338}
+    - target: {fileID: 7700997437450125110, guid: 2865cdc2c23336043a0f8d301c4051e6,
+        type: 3}
+      propertyPath: m_PlayerJoinedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7700997437450125111, guid: 2865cdc2c23336043a0f8d301c4051e6,
         type: 3}
