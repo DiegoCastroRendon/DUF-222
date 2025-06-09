@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Objeto que da puntos al jugador al recogerse.
+/// </summary>
 public class CollectibleItem : MonoBehaviour
 {
     //  puntos da esta bolita al recogerse

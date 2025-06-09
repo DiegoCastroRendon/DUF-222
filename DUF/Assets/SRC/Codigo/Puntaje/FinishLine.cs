@@ -2,11 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Detecta el mmomento en el que un jugador toca la capsula y avisa al GameManager.
+/// </summary>
 public class FinishLine : MonoBehaviour
 {
-    // victoria
+    /// <summary>
+    /// Referencia al controlador de la partida para decir el fin de la carrera.
+    /// </summary>
     public GameManager gameManager;
 
+    /// <summary>
+    /// Se ejecuta al entrar en el trigger.
+    /// </summary>
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))

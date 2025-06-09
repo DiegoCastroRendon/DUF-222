@@ -3,11 +3,26 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
+/// <summary>
+/// Controlador para manejar el menu de pausa en el juego.
+/// Permite pausar y reanudar la simulacion, asi como volver al menu principal.
+/// </summary>
 public class PauseMenuController : MonoBehaviour
 {
+    /// <summary>
+    /// GameObject que contiene la interfaz de usuario del menu de pausa.
+    /// </summary>
     public GameObject pausePanel;
+
+    /// <summary>
+    /// Indica si el juego esta actualmente en estado de pausa.
+    /// </summary>
     private bool isPaused = false;
 
+    /// <summary>
+    /// Comprueba si se apreto la tecla escape para alternar
+    /// entre pausar y reanudar el juego.
+    /// </summary>
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -17,6 +32,10 @@ public class PauseMenuController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Activa el menu de pausa y muestra el panel, tambien detiene la simulacion y
+    /// desbloquea el cursor para permitir interaccion con la UI.
+    /// </summary>
     public void Pause()
     {
         pausePanel.SetActive(true);
@@ -27,6 +46,10 @@ public class PauseMenuController : MonoBehaviour
         Cursor.visible   = true;
     }
 
+    /// <summary>
+    /// Reanuda la simulacion desde pausa oculta el panel, restablece el tiempo
+    /// y bloquea el cursor para volver al control del jugador.
+    /// </summary>
     public void Resume()
     {
         Debug.Log("Test1Resume");
@@ -38,6 +61,9 @@ public class PauseMenuController : MonoBehaviour
         Cursor.visible   = false;
     }
 
+    /// <summary>
+    /// Vuelve al menu principal cargando la escena con indice 0
+    /// </summary>
     public void ReturnToMainMenu()
     {
         Debug.Log("Test2MainMenu");

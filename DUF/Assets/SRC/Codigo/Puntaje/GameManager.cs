@@ -5,6 +5,10 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controlador principal de la partida, ajustar el temporizador, los puntajes de los jugadores,
+/// la interfaz de resultados y poder navegar entre escenas como revancha y el menu principal).
+/// </summary>
 public class GameManager : MonoBehaviour
 {
     [Header("Puntuaciones")]
@@ -24,6 +28,12 @@ public class GameManager : MonoBehaviour
     private float timeRemaining;
     private bool isRaceOver = false;
 
+    /// <summary>
+    /// Inicializa el temporizadortambien oculta el panel de resultados y obtiene referencias a los componentes necesarios.
+    /// </summary>
+    /// <returns>
+    /// Coroutine que se espera hasta que existan al menos dos instancias de <see cref="PlayerScore"/> en escena.
+    /// </returns>
     private IEnumerator Start()
     {
         // inicializamos el tiempo de la carrera
@@ -48,6 +58,9 @@ public class GameManager : MonoBehaviour
         Cursor.visible   = false;
     }
 
+    /// <summary>
+    /// Actualiza el temporizador y los puntajes si la carrera sigue activa.
+    /// </summary>
     private void Update()
     {
         if (isRaceOver)
@@ -65,6 +78,9 @@ public class GameManager : MonoBehaviour
         UpdateScoreUI();
     }
 
+    /// <summary>
+    /// Actualiza el texto del temporizador.
+    /// </summary>
     private void UpdateTimerUI()
     {
         // convertimos segundos a mm:ss
@@ -73,6 +89,9 @@ public class GameManager : MonoBehaviour
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
+    /// <summary>
+    /// Actualiza los textos de puntaje de ambos jugadores.
+    /// </summary>
     private void UpdateScoreUI()
     {
         // mostramos puntaje actual de cada jugador
@@ -82,6 +101,9 @@ public class GameManager : MonoBehaviour
         player2ScoreText.text = $"Jugador 2: {player2Score.currentScore}";
     }
 
+    /// <summary>
+    /// Determina el ganador al terminar el tiempo comparando los puntajes.
+    /// </summary>
     private void EndRaceByTime()
     {
         // determinamos ganador por puntaje
@@ -98,7 +120,9 @@ public class GameManager : MonoBehaviour
 
     }
 
-    // Llamada de FinishLine para cunado un jugador toca la meta o el objeto de meta
+    /// <summary>
+    /// Llamado por la linea de meta que es una capsula al tocarla un jugador para declarar ganador de inmediato.
+    /// </summary>
     public void OnPlayerFinish(int playerNumber)
     {
         if (isRaceOver)
@@ -107,6 +131,9 @@ public class GameManager : MonoBehaviour
         DeclareWinner(playerNumber);
     }
 
+    /// <summary>
+    /// Declara ganador y para el juego y muestra el panel de resultado.
+    /// </summary>
     private void DeclareWinner(int playerNumber)
     {
         isRaceOver = true;
@@ -122,7 +149,9 @@ public class GameManager : MonoBehaviour
 
     }
 
-    // aun por probar con el puntaje de los dos jugadores REVISAR
+    /// <summary>
+    /// Marca mpate cuando ambos puntajes son iguales.
+    /// </summary>
     private void DeclareTie()
     {
         isRaceOver = true;
@@ -132,7 +161,9 @@ public class GameManager : MonoBehaviour
         resultText.text = "¡Empate!";
     }
 
-    // revancha
+    /// <summary>
+    /// Recarga la escena actual para hace revancha.
+    /// </summary>
     public void ReplayRace()
     {
         Time.timeScale = 1f;
@@ -144,7 +175,9 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(current.buildIndex);
     }
 
-    // salir
+    /// <summary>
+    /// Sale al menu principal.
+    /// </summary>
     public void ExitToMainMenu()
     {
         Time.timeScale = 1f;
