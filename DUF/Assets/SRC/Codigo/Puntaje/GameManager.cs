@@ -136,7 +136,12 @@ public class GameManager : MonoBehaviour
     public void ReplayRace()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(1);
+
+        //  escena actualmente activa
+        Scene current = SceneManager.GetActiveScene();
+
+        // recargamos por índice 
+        SceneManager.LoadScene(current.buildIndex);
     }
 
     // salir
