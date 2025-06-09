@@ -4,6 +4,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Permite al jugador engancharse a superficies con una cuerda y ser impulsado hacia ellas.
+/// </summary>
 public class Grappling : MonoBehaviour
 {
     [Header("Referencias")]
@@ -40,29 +43,34 @@ public class Grappling : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         pm = GetComponent<MovimientoJugador>();
         grapplingCdTimer = grapplingCd;
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        
-        if(grapplingCdTimer > 0){
+
+        if (grapplingCdTimer > 0)
+        {
             grapplingCdTimer -= Time.deltaTime;
-            
+
         }
-        
+
     }
 
     private void LateUpdate()
     {
-        if (grappling){
+        if (grappling)
+        {
             lr.SetPosition(0, gunTip.position);
 
         }
     }
 
+    /// <summary>
+    /// Inicia el intento de enganche cuando se presiona la tecla asignada.
+    /// </summary>
     public void StartGrapple(InputAction.CallbackContext callbackContext)
     {
         if (callbackContext.started)
@@ -72,11 +80,14 @@ public class Grappling : MonoBehaviour
             pm.congelado = true;
 
             RaycastHit hit;
-            if (Physics.Raycast(cam.position, cam.forward, out hit, maxGrappleDistance, whatIsGrappleable)){
+            if (Physics.Raycast(cam.position, cam.forward, out hit, maxGrappleDistance, whatIsGrappleable))
+            {
                 grapplePoint = hit.point;
 
                 Invoke(nameof(ExecuteGrapple), grappleDelay);
-            }else{
+            }
+            else
+            {
                 grapplePoint = cam.position + cam.forward * maxGrappleDistance;
                 Invoke(nameof(EndGrapple), grappleDelay);
             }
@@ -87,10 +98,14 @@ public class Grappling : MonoBehaviour
 
     }
 
-    private void ExecuteGrapple(){
+    /// <summary>
+    /// Ejecuta el impulso hacia el punto de enganche.
+    /// </summary>
+    private void ExecuteGrapple()
+    {
         pm.congelado = false;
 
-        Vector3 lowGrapplePoint = new Vector3(transform.position.x, transform.position.y -1f , transform.position.z);
+        Vector3 lowGrapplePoint = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
         float grapplePointRelativeY = grapplePoint.y - lowGrapplePoint.y;
         float highPoint = grapplePointRelativeY + overshootY;
         if (grapplePointRelativeY < 0) highPoint = overshootY;
@@ -100,10 +115,14 @@ public class Grappling : MonoBehaviour
     }
 
 
-    public void EndGrapple(){
+    /// <summary>
+    /// Finaliza el proceso del gancho y reinicia su cooldown.
+    /// </summary>
+    public void EndGrapple()
+    {
         pm.congelado = false;
         grappling = false;
-        grapplingCdTimer = grapplingCd; 
+        grapplingCdTimer = grapplingCd;
         lr.enabled = false;
 
     }

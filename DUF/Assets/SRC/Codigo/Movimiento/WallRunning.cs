@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
+/// <summary>
+/// Controla la mecánica de wallrunning (correr en paredes) del jugador.
+/// </summary>
 public class WallRunning : MonoBehaviour
 {
 
@@ -24,7 +28,7 @@ public class WallRunning : MonoBehaviour
     private bool runAbajo;
     private float horizontalInput;
     private float verticalInput;
-    [Header ("Deteccion")]
+    [Header("Deteccion")]
     public float checaDistanciaPared;
     public float minAlturaSalto;
     private RaycastHit izqWallHit;
@@ -32,7 +36,7 @@ public class WallRunning : MonoBehaviour
     private bool paredIzq;
     private bool paredDer;
 
-    [Header ("Saliendo")]
+    [Header("Saliendo")]
     private bool saliendoPared;
     public float tiempoSalidaPared;
     private float contadorTiempoSalida;
@@ -67,23 +71,37 @@ public class WallRunning : MonoBehaviour
         Estados();
     }
 
-    void FixedUpdate(){
-        if(pm.wallrunning){
+    void FixedUpdate()
+    {
+        if (pm.wallrunning)
+        {
             WallRunMov();
         }
     }
 
-    private void VerificaPared(){
+    /// <summary>
+    /// Verifica si hay paredes a izquierda o derecha.
+    /// </summary>
+    private void VerificaPared()
+    {
         paredDer = Physics.Raycast(transform.position, orientacion.right, out derWallHit, checaDistanciaPared, esPared);
         paredIzq = Physics.Raycast(transform.position, -orientacion.right, out izqWallHit, checaDistanciaPared, esPared);
 
     }
 
-    private bool SobreSuelo(){
+    /// <summary>
+    /// Verifica si el jugador está lo suficientemente lejos del suelo para wallrun.
+    /// </summary>
+    private bool SobreSuelo()
+    {
         return !Physics.Raycast(transform.position, Vector3.down, minAlturaSalto, esSuelo);
     }
 
-    private void Estados(){
+    /// <summary>
+    /// Gestiona los estados de entrada y wallrun.
+    /// </summary>
+    private void Estados()
+    {
         input = playerInput.actions["Moverse"].ReadValue<Vector2>();
         //Controles
         horizontalInput = input.y;
@@ -93,45 +111,62 @@ public class WallRunning : MonoBehaviour
         //runAbajo = Input.GetKey(WallRunAbajo);
 
         // Estado de wallrun
-        if((paredIzq || paredDer) && verticalInput > 0 && SobreSuelo() && !saliendoPared){
+        if ((paredIzq || paredDer) && verticalInput > 0 && SobreSuelo() && !saliendoPared)
+        {
             //Empezar wallrun
-            if(!pm.wallrunning){
+            if (!pm.wallrunning)
+            {
                 StartWallRun();
             }
 
-            if(contadorWallRun > 0){
+            if (contadorWallRun > 0)
+            {
                 contadorWallRun -= Time.deltaTime;
             }
 
-            if(contadorWallRun <= 0 && pm.wallrunning){
+            if (contadorWallRun <= 0 && pm.wallrunning)
+            {
                 saliendoPared = true;
-                contadorTiempoSalida = tiempoSalidaPared; 
+                contadorTiempoSalida = tiempoSalidaPared;
             }
 
-            if(playerInput.actions["Saltar"].IsPressed()){
+            if (playerInput.actions["Saltar"].IsPressed())
+            {
                 WallJump();
             }
 
-        }else if(saliendoPared){
-            if(pm.wallrunning){
+        }
+        else if (saliendoPared)
+        {
+            if (pm.wallrunning)
+            {
                 StopWallRun();
             }
 
-            if(contadorTiempoSalida > 0){
+            if (contadorTiempoSalida > 0)
+            {
                 contadorTiempoSalida -= Time.deltaTime;
             }
-            if(contadorTiempoSalida <= 0){
+            if (contadorTiempoSalida <= 0)
+            {
                 saliendoPared = false;
             }
-        }else{
-            
-            if(pm.wallrunning){
+        }
+        else
+        {
+
+            if (pm.wallrunning)
+            {
                 StopWallRun();
             }
         }
     }
 
-    private void StartWallRun(){
+    /// <summary>
+    /// Inicia el wallrun.
+    /// </summary>
+    private void StartWallRun()
+    {
         pm.wallrunning = true;
 
         contadorWallRun = tiempoMaximoWallRun;
@@ -139,12 +174,17 @@ public class WallRunning : MonoBehaviour
 
         //efectos de la camara
         cam.DoFoV(90f);
-        if(paredIzq) cam.DoTilt(-5f);
-        if(paredDer) cam.DoTilt(5f);
+        if (paredIzq) cam.DoTilt(-5f);
+        if (paredDer) cam.DoTilt(5f);
 
     }
 
-    private void WallRunMov(){
+
+    /// <summary>
+    /// Aplica movimiento durante el wallrun.
+    /// </summary>
+    private void WallRunMov()
+    {
 
         rb.useGravity = useGravity;
 
@@ -152,36 +192,46 @@ public class WallRunning : MonoBehaviour
         Vector3 wallNormal = paredDer ? derWallHit.normal : izqWallHit.normal;
         Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
-        
 
-        if((orientacion.forward - wallForward).magnitude > (orientacion.forward - -wallForward).magnitude){
+
+        if ((orientacion.forward - wallForward).magnitude > (orientacion.forward - -wallForward).magnitude)
+        {
             wallForward = -wallForward;
         }
 
         rb.AddForce(wallForward * fuerzaWallRun, ForceMode.Force);
 
-        if(playerInput.actions["Correr"].IsPressed()){
-            rb.velocity = new Vector3(rb.velocity.x, velocidadSubirPared, rb.velocity.z); 
+        if (playerInput.actions["Correr"].IsPressed())
+        {
+            rb.velocity = new Vector3(rb.velocity.x, velocidadSubirPared, rb.velocity.z);
         }
-        if(playerInput.actions["Agacharse"].IsPressed()){
-            rb.velocity = new Vector3(rb.velocity.x, -velocidadSubirPared, rb.velocity.z); 
+        if (playerInput.actions["Agacharse"].IsPressed())
+        {
+            rb.velocity = new Vector3(rb.velocity.x, -velocidadSubirPared, rb.velocity.z);
         }
 
         //Empujar a la pared
-        if(!(paredIzq && horizontalInput > 0) && !(paredDer && horizontalInput < 0)){
-            rb.AddForce(-wallNormal * 100, ForceMode.Force);  
+        if (!(paredIzq && horizontalInput > 0) && !(paredDer && horizontalInput < 0))
+        {
+            rb.AddForce(-wallNormal * 100, ForceMode.Force);
         }
 
         // Debilitar un poco la gravedad 
-        if(useGravity){
+        if (useGravity)
+        {
             rb.AddForce(transform.up * antiGravedad, ForceMode.Force);
         }
-          
+
 
 
     }
 
-    private void StopWallRun(){
+
+    /// <summary>
+    /// Detiene el wallrun y reinicia los efectos visuales.
+    /// </summary>
+    private void StopWallRun()
+    {
         pm.wallrunning = false;
 
         // quitar efectos de la camara
@@ -190,7 +240,11 @@ public class WallRunning : MonoBehaviour
 
     }
 
-    private void WallJump(){
+    /// <summary>
+    /// Funcion para ejecutar un salto desde la pared.
+    /// </summary
+    private void WallJump()
+    {
         if (eb.sujetando || eb.saliendoBorde) return;
 
         saliendoPared = true;
