@@ -14,4 +14,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestRoom.unity
     guid: 543e7c97bb45d694696ab382c2eeabc0
+  - enabled: 1
+    path: Assets/Scenes/Mapa1.unity
+    guid: 3f02e876c6837ab4f8fab9a9de04a380
+  - enabled: 1
+    path: Assets/Scenes/MapaU.unity
+    guid: 1ef1d8e5673efa74bb3c335b30a1aead
+  - enabled: 1
+    path: Assets/Scenes/SelectMaps.unity
+    guid: a29be41e390dd434f8aaf6dc83a9ba80
   m_configObjects: {}

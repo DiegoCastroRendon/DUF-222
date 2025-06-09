@@ -14,15 +14,25 @@ public class StartMenuController : MonoBehaviour
     public void PlayGame()
     {
         // Carga la escena 2
+        SceneManager.LoadScene(4);
+    }
+    
+     public void mapOne()
+    {
+      
         SceneManager.LoadScene(2);
+    }
+    public void mapTwo()
+    {
+        SceneManager.LoadScene(3);
     }
 
     public void QuitGame()
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-        #else
+#else
         Application.Quit();
-        #endif
+#endif
     }
 }
