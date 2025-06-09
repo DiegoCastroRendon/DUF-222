@@ -84,7 +84,9 @@ public class MovimientoJugador : MonoBehaviour
     public bool congelado;
     public bool ilimitado;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Inicializa las referencias y variables necesarias para el movimiento del jugador.
+    /// </summary>
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
@@ -98,7 +100,9 @@ public class MovimientoJugador : MonoBehaviour
         inicioEscalY = transform.localScale.y;
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Actualiza el estado del jugador, gestiona entradas y controla la velocidad.
+    /// </summary>
     void Update()
     {
 
@@ -121,6 +125,9 @@ public class MovimientoJugador : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Aplica la física de movimiento del jugador.
+    /// </summary>
     void FixedUpdate()
     {
         Movimiento();
@@ -128,6 +135,9 @@ public class MovimientoJugador : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Lee la entrada del jugador para el movimiento.
+    /// </summary>
     public void Inputs()
     {
         // inputHorizontal = Input.GetAxisRaw("Horizontal");
@@ -136,6 +146,9 @@ public class MovimientoJugador : MonoBehaviour
         input = playerInput.actions["Moverse"].ReadValue<Vector2>();
     }
 
+    /// <summary>
+    /// Gestiona el movimiento del jugador, incluyendo pendientes y diferentes estados.
+    /// </summary>
     private void Movimiento()
     {
 
@@ -167,6 +180,9 @@ public class MovimientoJugador : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Controla la velocidad máxima del jugador según el estado y el entorno.
+    /// </summary>
     private void ControlVelocidad()
     {
         if (activaGancho) return;
@@ -190,6 +206,10 @@ public class MovimientoJugador : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Ejecuta el salto si se cumplen las condiciones.
+    /// </summary>
+    /// <param name="callbackContext">Contexto de la acción de entrada.</param>
     public void Salto(InputAction.CallbackContext callbackContext)
     {
         if (callbackContext.performed && tocandoPiso)
@@ -207,6 +227,9 @@ public class MovimientoJugador : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Gestiona el estado de agacharse del jugador.
+    /// </summary>
     public void Agacharce(InputAction.CallbackContext callbackContext)
     {
         if (callbackContext.started || callbackContext.performed)
@@ -221,6 +244,10 @@ public class MovimientoJugador : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Gestiona el estado de correr del jugador.
+    /// </summary>
+    /// <param name="callbackContext">Contexto de la acción de entrada.</param>
     public void Correr(InputAction.CallbackContext callbackContext)
     {
         if (callbackContext.performed && tocandoPiso)
@@ -235,6 +262,9 @@ public class MovimientoJugador : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Restablece la capacidad de saltar y el estado de pendiente.
+    /// </summary>
     private void ResetSalto()
     {
         puedeSaltar = true;
@@ -242,6 +272,13 @@ public class MovimientoJugador : MonoBehaviour
         saliendoPendiente = false;
     }
 
+    /// <summary>
+    /// Calcula la velocidad necesaria para saltar de un punto a otro con una altura específica.
+    /// </summary>
+    /// <param name="startPoint">Punto de inicio.</param>
+    /// <param name="endPoint">Punto de destino.</param>
+    /// <param name="trajectoryHeight">Altura máxima de la trayectoria.</param>
+    /// <returns>Vector de velocidad calculado.</returns>
     public Vector3 CalculateJumpVelocity(Vector3 startPoint, Vector3 endPoint, float trajectoryHeight)
     {
         float gravity = Physics.gravity.y;
@@ -258,6 +295,11 @@ public class MovimientoJugador : MonoBehaviour
 
 
     private bool enableMovement;
+    /// <summary>
+    /// Realiza un salto hacia una posición objetivo con una altura determinada.
+    /// </summary>
+    /// <param name="targetPos">Posición objetivo.</param>
+    /// <param name="height">Altura del salto.</param>
     public void JumpToPosition(Vector3 targetPos, float height)
     {
         activaGancho = true;
@@ -268,17 +310,27 @@ public class MovimientoJugador : MonoBehaviour
 
     private Vector3 velocidadToSet;
 
+    /// <summary>
+    /// Asigna la velocidad calculada al Rigidbody.
+    /// </summary>
     private void SetVelocidad()
     {
         enableMovement = true;
         rb.velocity = velocidadToSet;
     }
 
+    /// <summary>
+    /// Restablece las restricciones de movimiento después de usar el gancho.
+    /// </summary>
     public void ResetRestrictions()
     {
         activaGancho = false;
     }
 
+    /// <summary>
+    /// Maneja la colisión al aterrizar después de usar el gancho.
+    /// </summary>
+    /// <param name="collision">Información de la colisión.</param>    
     private void OllisionEnter(Collision collision)
     {
         if (enableMovement)
@@ -291,7 +343,9 @@ public class MovimientoJugador : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// Gestiona el estado de movimiento del jugador según las condiciones actuales.
+    /// </summary>
     private void ManejadorEstadoMovimiento()
     {
 
@@ -365,6 +419,10 @@ public class MovimientoJugador : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Corrutina para suavizar la transición de velocidad al cambiar de estado.
+    /// </summary>
+    /// <returns>IEnumerator para la corrutina.</returns>
     private IEnumerator PerdidadVelocidadMovimietnoSueave()
     {
         float tiempo = 0f;
@@ -380,6 +438,10 @@ public class MovimientoJugador : MonoBehaviour
         velocidadMovimiento = velocidadMovimientoDeseada;
     }
 
+    /// <summary>
+    /// Determina si el jugador está sobre una pendiente válida.
+    /// </summary>
+    /// <returns>True si está en pendiente, de lo contrario false.</returns>
     public bool EnPendiente()
     {
         if (Physics.Raycast(transform.position, Vector3.down, out tocandoPendiente, alturaJugador * 0.5f + 0.3f))
@@ -391,6 +453,11 @@ public class MovimientoJugador : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Calcula la dirección de movimiento ajustada a la pendiente.
+    /// </summary>
+    /// <param name="direccion">Dirección original de movimiento.</param>
+    /// <returns>Dirección ajustada a la pendiente.</returns>
     public Vector3 GetDireccionMovimientoPendiente(Vector3 direccion)
     {
         return Vector3.ProjectOnPlane(direccion, tocandoPendiente.normal).normalized;

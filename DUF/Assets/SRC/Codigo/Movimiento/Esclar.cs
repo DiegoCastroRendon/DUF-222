@@ -34,13 +34,18 @@ public class Esclar : MonoBehaviour
     private RaycastHit paredFrontalHit;
     public bool paredFrente;
 
-
+    /// <summary>
+    /// Inicializa las referencias necesarias para la escalada.
+    /// </summary>
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
         eb = GetComponent<EscaladaBordes>();
     }
 
+    /// <summary>
+    /// Llama a la comprobación de pared, la máquina de estados y gestiona el movimiento de escalada.
+    /// </summary>
     void Update()
     {
         ParedCheck();
@@ -52,7 +57,11 @@ public class Esclar : MonoBehaviour
         }
     }
 
-    private void MaquinaEstado() {
+    /// <summary>
+    /// Controla el estado de la escalada según las condiciones del entorno y la entrada del jugador.
+    /// </summary>
+    private void MaquinaEstado()
+    {
         if (eb.sujetando)
         {
             if (escalando) PararEscalada();
@@ -71,7 +80,9 @@ public class Esclar : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Comprueba si hay una pared frente al jugador y calcula el ángulo de visión.
+    /// </summary>
     private void ParedCheck() {
         paredFrente = Physics.SphereCast(transform.position, radioEsferaCompartido, orientacion.forward, out paredFrontalHit, distanciaDeteccion, esPared);
         anguloVisionPared = Vector3.Angle(orientacion.forward, -paredFrontalHit.normal);
@@ -82,14 +93,26 @@ public class Esclar : MonoBehaviour
         }
     }
     
-
+    /// <summary>
+    /// Inicia el estado de escalada.
+    /// </summary>
     private void IniciarEscalada() {
         escalando = true;
     }
-    private void MoviminetoEscalada() {
+    
+    /// <summary>
+    /// Aplica el movimiento vertical durante la escalada.
+    /// </summary>
+    private void MoviminetoEscalada()
+    {
         rb.velocity = new Vector3(rb.velocity.x, velocidadEscalada, rb.velocity.z);
     }
-    private void PararEscalada() {
+    
+    /// <summary>
+    /// Detiene el estado de escalada.
+    /// </summary>
+    private void PararEscalada()
+    {
         escalando = false;
     }
 }

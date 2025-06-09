@@ -43,12 +43,17 @@ public class EscaladaBordes : MonoBehaviour
     public float tiempoSalidaBorde;
     public float contadorSaldaBorde;
 
-
+    /// <summary>
+    /// Inicializa la referencia al componente PlayerInput.
+    /// </summary>
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
     }
 
+    /// <summary>
+    /// Llama a la detección de bordes y a la máquina de estados en cada frame.
+    /// </summary>
     void Update()
     {
         DeteccionBordes();
@@ -56,7 +61,9 @@ public class EscaladaBordes : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// Detecta si el jugador está cerca de un borde y gestiona la lógica para sujetarse.
+    /// </summary>
     private void DeteccionBordes() {
         bool bordeDetectado = Physics.SphereCast(transform.position, radioEsferaCastBorde, camara.forward, out bordeHit, distanciaDeteccionBorde, esBorde);
 
@@ -76,7 +83,11 @@ public class EscaladaBordes : MonoBehaviour
 
     }
 
-    private void MaquinaEstado() {
+    /// <summary>
+    /// Controla el estado del jugador respecto a los bordes (sujetando, saliendo, etc).
+    /// </summary>
+    private void MaquinaEstado()
+    {
         input = playerInput.actions["Moverse"].ReadValue<Vector2>();
 
         float inputHorizontal = input.y;
@@ -99,9 +110,12 @@ public class EscaladaBordes : MonoBehaviour
             if (contadorSaldaBorde > 0) tiempoEnBorde -= Time.deltaTime;
             else saliendoBorde = false;
         }
-        
+
     }
 
+    /// <summary>
+    /// Realiza el salto desde el borde.
+    /// </summary>
     public void SaltoBorde()
     {
         SalidaSujetandoBorde();
@@ -109,6 +123,9 @@ public class EscaladaBordes : MonoBehaviour
         Invoke(nameof(SaltoBordeDelay), 0.05f);
     }
 
+    /// <summary>
+    /// Aplica la fuerza de salto después de un pequeño retardo.
+    /// </summary>
     private void SaltoBordeDelay()
     {
         Vector3 fuarzaA = camara.forward * fuerzaSaltoBordeAdelatne + orientacion.up * fuerzaSaltoBordeArriba;
@@ -117,6 +134,9 @@ public class EscaladaBordes : MonoBehaviour
         rb.AddForce(fuarzaA, ForceMode.Impulse);
     }
 
+    /// <summary>
+    /// Activa el estado de sujetar el borde y ajusta las restricciones del jugador.
+    /// </summary>
     private void EntradaSujetandoBorde()
     {
         sujetando = true;
@@ -130,28 +150,42 @@ public class EscaladaBordes : MonoBehaviour
         rb.useGravity = false;
         rb.velocity = Vector3.zero;
     }
-    private void CongelarRBEnBorde() {
+    
+    /// <summary>
+    /// Congela el Rigidbody y mueve al jugador hacia el borde mientras lo está sujetando.
+    /// </summary>
+    private void CongelarRBEnBorde()
+    {
         rb.useGravity = false;
         Vector3 puntoRef = camara.position;
 
         Vector3 direccionAlBorde = bordeActual.position - orientacion.position;
         float distanciaAlBorde = Vector3.Distance(orientacion.position, bordeActual.position);
 
-        if(distanciaAlBorde > 1f) {
+        if (distanciaAlBorde > 1f)
+        {
 
-            if(rb.velocity.magnitude < velocidadMovABorde) {
+            if (rb.velocity.magnitude < velocidadMovABorde)
+            {
                 rb.AddForce(1000f * Time.deltaTime * velocidadMovABorde * direccionAlBorde.normalized);
             }
 
 
-        } else {
+        }
+        else
+        {
             if (!pm.congelado) pm.congelado = true;
-            if(pm.ilimitado) pm.ilimitado = false;
+            if (pm.ilimitado) pm.ilimitado = false;
         }
 
-        if(distanciaAlBorde > distanciaMaxSujetarBorde) SalidaSujetandoBorde();
+        if (distanciaAlBorde > distanciaMaxSujetarBorde) SalidaSujetandoBorde();
     }
-    private void SalidaSujetandoBorde() {
+    
+    /// <summary>
+    /// Sale del estado de sujetar el borde y restablece las restricciones.
+    /// </summary>
+    private void SalidaSujetandoBorde()
+    {
         saliendoBorde = true;
         contadorSaldaBorde = tiempoSalidaBorde;
 
@@ -169,7 +203,11 @@ public class EscaladaBordes : MonoBehaviour
         Invoke(nameof(ReiniciarUltimoBorde), 1f);
     }
 
-    private void ReiniciarUltimoBorde() {
+    /// <summary>
+    /// Reinicia la referencia al último borde para permitir volver a sujetarse.
+    /// </summary>
+    private void ReiniciarUltimoBorde()
+    {
         ultimoBorde = null;
     }
 }

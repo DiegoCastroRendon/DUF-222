@@ -18,6 +18,9 @@ public class CamaraFP : MonoBehaviour
     float rotacionX;
     float rotacionY;
 
+    /// <summary>
+    /// Inicializa el componente PlayerInput y bloquea el cursor al centro de la pantalla.
+    /// </summary>
     void Start()
     {
         playerInput = FindObjectOfType<PlayerInput>();
@@ -25,6 +28,9 @@ public class CamaraFP : MonoBehaviour
         Cursor.visible = false;
     }
 
+    /// <summary>
+    /// Lee la entrada de la cámara, actualiza la rotación de la cámara y la orientación del jugador.
+    /// </summary>
     void Update()
     {
         input = playerInput.actions["Camara"].ReadValue<Vector2>();
@@ -44,15 +50,25 @@ public class CamaraFP : MonoBehaviour
         orientation.rotation = Quaternion.Euler(0, rotacionY, 0);
     }
 
-    public void DoFoV(float endValue){
+    /// <summary>
+    /// Realiza una animación de cambio de Field of View (FoV) de la cámara.
+    /// </summary>
+    /// <param name="endValue">Valor final del Field of View.</param>
+    public void DoFoV(float endValue)
+    {
 
-        GetComponent<Camera>().DOFieldOfView(endValue,0.25f);
+        GetComponent<Camera>().DOFieldOfView(endValue, 0.25f);
 
     }
 
-    public void DoTilt(float zTilt){
+    /// <summary>
+    /// Realiza una animación de inclinación (tilt) de la cámara en el eje Z.
+    /// </summary>
+    /// <param name="zTilt">Ángulo de inclinación en el eje Z.</param>
+    public void DoTilt(float zTilt)
+    {
 
-        transform.DOLocalRotate(new Vector3(0,0,zTilt), 0.25f);
+        transform.DOLocalRotate(new Vector3(0, 0, zTilt), 0.25f);
 
     }
 }

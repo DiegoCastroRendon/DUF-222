@@ -35,7 +35,9 @@ public class Deslizamiento : MonoBehaviour
 
 
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Inicializa las referencias y variables necesarias para el deslizamiento.
+    /// </summary>
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -45,7 +47,9 @@ public class Deslizamiento : MonoBehaviour
         escalaInicalY = playerObj.localScale.y;
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Llama a Inputs() y gestiona la lógica de entrada para el deslizamiento.
+    /// </summary>
     void Update()
     {
         Inputs();
@@ -63,12 +67,20 @@ public class Deslizamiento : MonoBehaviour
         */
     }
 
+    /// <summary>
+    /// Aplica la física del deslizamiento si el jugador está deslizándose.
+    /// </summary>
     void FixedUpdate()
     {
         if(pm.deslizandose) {
             MovimietoDeslizamiento();
         }
     }
+    
+    /// <summary>
+    /// Inicia el deslizamiento si la entrada es válida y se puede deslizar.
+    /// </summary>
+    /// <param name="callbackContext">Contexto de la acción de entrada.</param>
     public void InicarDeslizamiento(InputAction.CallbackContext callbackContext)
     {
 
@@ -87,14 +99,18 @@ public class Deslizamiento : MonoBehaviour
 
             Invoke(nameof(ReiniciarDeslizamiento), coolDownDeslizamiento);
         }
-        
+
         if (callbackContext.canceled)
         {
             DetenerDeslizamiento();
         }
-        
-        
+
+
     }
+
+    /// <summary>
+    /// Detiene el deslizamiento y restablece la escala del jugador.
+    /// </summary>
     private void DetenerDeslizamiento()
     {
         pm.deslizandose = false;
@@ -102,10 +118,17 @@ public class Deslizamiento : MonoBehaviour
         playerObj.localScale = new Vector3(playerObj.localScale.x, escalaInicalY, playerObj.localScale.z);
     }
 
-    private void ReiniciarDeslizamiento() {
+    /// <summary>
+    /// Permite que el jugador pueda volver a deslizarse después del cooldown.
+    /// </summary>
+    private void ReiniciarDeslizamiento()
+    {
         puedeDeslizarse = true;
     }
     
+    /// <summary>
+    /// Lee la entrada del jugador para el movimiento.
+    /// </summary>
     public void Inputs()
     {
         // inputHorizontal = Input.GetAxisRaw("Horizontal");
@@ -113,6 +136,10 @@ public class Deslizamiento : MonoBehaviour
 
         input = playerInput.actions["Moverse"].ReadValue<Vector2>();
     }
+
+    /// <summary>
+    /// Aplica la fuerza y lógica de movimiento durante el deslizamiento.
+    /// </summary>
     private void MovimietoDeslizamiento()
     {
 
